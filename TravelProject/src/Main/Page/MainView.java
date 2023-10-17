@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainView {
-    private PageChangeListener listener;
-
-    public JPanel mainPanel;
+public class MainView extends PageBase {
+    private JPanel mainPanel;
     private JPanel searchPanel;
     private JPanel themePanel;
     private JTextField searchTextField;
@@ -20,15 +18,19 @@ public class MainView {
     private JButton searchButton;
     private JPanel prevPanel;
 
-    public MainView(PageChangeListener listener) {
-        this.listener = listener;
+    public MainView(PageChangeListener _listener) {
+        super(_listener);
 
         th01.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("th01 is clicked");
-                listener.onPageChanged(new ListView(listener).mainPanel);
+                listener.onPageChanged(new ListView(listener).getMainPanel());
             }
         });
+    }
+
+    @Override
+    public JPanel getMainPanel() {
+        return mainPanel;
     }
 }
