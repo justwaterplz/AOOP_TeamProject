@@ -1,5 +1,6 @@
 package Main;
 
+import Main.Page.SwingController;
 import Main.Repository.MainRepository;
 
 public class Main {
@@ -16,6 +17,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        new MainView();
+        new SwingController();
     }
 }
