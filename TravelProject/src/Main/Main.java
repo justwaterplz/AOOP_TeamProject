@@ -15,5 +15,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        new MainView();
     }
 }
