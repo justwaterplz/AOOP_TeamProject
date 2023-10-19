@@ -48,7 +48,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="8b649" class="javax.swing.JButton" binding="th01">
+          <component id="8b649" class="javax.swing.JButton" binding="th01Button">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -56,7 +56,7 @@
               <text value="문화/예술"/>
             </properties>
           </component>
-          <component id="2ca2b" class="javax.swing.JButton" binding="th02">
+          <component id="2ca2b" class="javax.swing.JButton" binding="th02Button">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -64,7 +64,7 @@
               <text value="체험/학습/산업"/>
             </properties>
           </component>
-          <component id="f42d" class="javax.swing.JButton" binding="th03">
+          <component id="f42d" class="javax.swing.JButton" binding="th03Button">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -72,7 +72,7 @@
               <text value="자연/힐링"/>
             </properties>
           </component>
-          <component id="1c338" class="javax.swing.JButton" binding="th04">
+          <component id="1c338" class="javax.swing.JButton" binding="th04Button">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -80,7 +80,7 @@
               <text value="캠핑/스포츠"/>
             </properties>
           </component>
-          <component id="6d8c" class="javax.swing.JButton" binding="th05">
+          <component id="6d8c" class="javax.swing.JButton" binding="th05Button">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -88,7 +88,7 @@
               <text value="종교/역사/전통"/>
             </properties>
           </component>
-          <component id="e169c" class="javax.swing.JButton" binding="th06">
+          <component id="e169c" class="javax.swing.JButton" binding="th06Button">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -96,7 +96,7 @@
               <text value="쇼핑/놀이"/>
             </properties>
           </component>
-          <component id="83675" class="javax.swing.JButton" binding="th07">
+          <component id="83675" class="javax.swing.JButton" binding="insideButton">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -104,7 +104,7 @@
               <text value="실내"/>
             </properties>
           </component>
-          <component id="d418b" class="javax.swing.JButton" binding="th08">
+          <component id="d418b" class="javax.swing.JButton" binding="outsideButton">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>

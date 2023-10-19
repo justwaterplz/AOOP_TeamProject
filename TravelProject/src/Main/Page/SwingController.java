@@ -8,7 +8,7 @@ public class SwingController implements PageChangeListener {
     private JPanel prevPage;
 
     public SwingController() {
-        frame = new JFrame("AOOP");
+        frame = new JFrame("여행의 민족");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
