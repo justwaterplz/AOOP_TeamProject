@@ -16,6 +16,8 @@ public class MainView extends PageBase {
     private JButton th05;
     private JButton th06;
     private JButton searchButton;
+    private JButton th07;
+    private JButton th08;
     private JPanel prevPanel;
 
     public MainView(PageChangeListener _listener) {
