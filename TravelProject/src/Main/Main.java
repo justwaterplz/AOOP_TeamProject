@@ -1,5 +1,6 @@
 package Main;
 
+import Main.Page.SwingController;
 import Main.Repository.MainRepository;
 
 public class Main {
@@ -15,5 +16,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        new SwingController();
     }
 }
