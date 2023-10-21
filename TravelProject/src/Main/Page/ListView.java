@@ -44,6 +44,7 @@ public class ListView extends PageBase {
 
         scrollPane.setViewportView(listPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         // 액션 리스너 등록
         backButton.addActionListener(e -> listener.returnToPrevPage());
