@@ -15,7 +15,7 @@ public class MainService {
     public ArrayList<Model관광지> findTouristSpots(String type, String data) {
         ArrayList<Model관광지> model관광지 = new ArrayList<>();
         if(type.equals("검색")){
-
+            model관광지 = mainRepository.get관광지ListBySearch(data);
         } else if (type.equals("테마")) {
             model관광지 = mainRepository.get관광지ListByTheme(data);
         } else if (type.equals("실내외")) {
