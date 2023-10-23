@@ -19,9 +19,9 @@ public class MainView extends PageBase {
     private JButton th05Button;
     private JButton th06Button;
     private JButton searchButton;
-    private JButton insideButton;
-    private JButton outsideButton;
-    private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, insideButton, outsideButton};
+    private JButton indoorButton;
+    private JButton outdoorButton;
+    private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, indoorButton, outdoorButton};
     private JPanel prevPanel;
 
     public MainView(PageChangeListener _listener) {
@@ -68,10 +68,10 @@ public class MainView extends PageBase {
             } else if (clickedButton == th06Button) {   // "체험학습산업"
                 filterData.put("FilterType","테마");
                 filterData.put("FilterData","TH06");
-            } else if (clickedButton == insideButton) { // "실내"
+            } else if (clickedButton == indoorButton) { // "실내"
                 filterData.put("FilterType","실내외");
                 filterData.put("FilterData","실내");
-            } else if (clickedButton == outsideButton) {  // "실외"
+            } else if (clickedButton == outdoorButton) {  // "실외"
                 filterData.put("FilterType","실내외");
                 filterData.put("FilterData","실외");
             }
