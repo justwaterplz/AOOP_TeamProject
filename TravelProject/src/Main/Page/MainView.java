@@ -1,11 +1,14 @@
 package Main.Page;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainView extends PageBase {
     private JPanel mainPanel;
@@ -22,7 +25,12 @@ public class MainView extends PageBase {
     private JButton indoorButton;
     private JButton outdoorButton;
     private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, indoorButton, outdoorButton};
-    private JPanel prevPanel;
+
+    // button background color
+    Color themeButtonPressed = new Color(255, 0, 0);
+    Color themeButtonRollOver = new Color(230, 247, 255);
+    Color searchButtonPressed = new Color(0, 255, 0);
+    Color searchButtonRollover = new Color(230, 247, 0);
 
     public MainView(PageChangeListener _listener) {
         super(_listener);
@@ -30,6 +38,12 @@ public class MainView extends PageBase {
         // 버튼 리스너 등록
         for (JButton button : actionButtons) {
             button.addActionListener(new ButtonActionListener());
+
+            // button mouse listener 등록
+            if (button != searchButton)
+                button.addMouseListener(getButtonMouseListener(button, themeButtonPressed, themeButtonRollOver));
+            else
+                button.addMouseListener(getButtonMouseListener(button, searchButtonPressed, searchButtonRollover));
 
             // image button 설정
             button.setFocusPainted(false);

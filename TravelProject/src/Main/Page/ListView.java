@@ -24,7 +24,6 @@ public class ListView extends PageBase {
         // 동적으로 버튼들을 담을 리스트 패널 생성
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        //listPanel.add(Box.createHorizontalStrut(10));
 
         // 필터정보를 기준으로 TouristSpotList를 가져온다.
         touristSpotList = mainService.findTouristSpots(filterData.get("FilterType"), filterData.get("FilterData"));

@@ -58,15 +58,16 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <borderPainted value="false"/>
-              <contentAreaFilled value="false"/>
-              <focusPainted value="false"/>
+              <background color="-13947600"/>
+              <borderPainted value="true"/>
+              <contentAreaFilled value="true"/>
+              <focusPainted value="true"/>
               <foreground color="-16777216"/>
-              <horizontalTextPosition value="0"/>
+              <horizontalTextPosition value="11"/>
               <icon value="Main/Image/th01.png"/>
               <text value="문화/예술"/>
               <verticalAlignment value="0"/>
-              <verticalTextPosition value="3"/>
+              <verticalTextPosition value="0"/>
             </properties>
           </component>
           <component id="2ca2b" class="javax.swing.JButton" binding="th02Button">
