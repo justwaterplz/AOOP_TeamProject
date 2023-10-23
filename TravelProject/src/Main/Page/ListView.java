@@ -43,6 +43,9 @@ public class ListView extends PageBase {
 
             // button mouse listener 등록
             button.addMouseListener(getButtonMouseListener(button, listButtonPressedColor, listButtonRolloverColor));
+            // image button 초기화
+            // TODO : image button이 아니라면 그에 대응되는 메소드 호출로 변경
+            initializeImageButton(button);
         }
 
         // 가져온 정보가 없을 때 표시
@@ -57,13 +60,8 @@ public class ListView extends PageBase {
         // 액션 리스너 등록
         backButton.addActionListener(e -> listener.returnToPrevPage());
         backButton.addMouseListener(getButtonMouseListener(backButton, backButtonPressedColor, backButtonRolloverColor));
-        // image button 설정        
-        backButton.setFocusPainted(false);
-        backButton.setContentAreaFilled(false);
-        backButton.setBorderPainted(false);
-        backButton.setForeground(Color.BLACK);
-        backButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        // image button 초기화
+        initializeImageButton(backButton);
     }
 
     @Override

@@ -21,6 +21,7 @@ abstract public class PageBase {
 
     abstract public JPanel getMainPanel();
 
+    // TODO : 현재는 image button으로 가정하고 메소드 작성, 추후에 필요하면 image button이 아닌 경우의 함수 추가 필요
     protected MouseListener getButtonMouseListener(JButton button, Color pressed, Color rollover) {
         return new MouseListener() {
             public void mouseClicked(MouseEvent e) {
@@ -50,5 +51,14 @@ abstract public class PageBase {
                 button.setBackground(UIManager.getColor("control")); // 버튼에서 마우스가 나갔을 때 기본 배경색으로 변경
             }
         };
+    }
+
+    protected void initializeImageButton(JButton button) {
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setForeground(Color.BLACK);
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 }

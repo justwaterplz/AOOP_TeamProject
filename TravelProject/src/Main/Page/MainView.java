@@ -45,13 +45,8 @@ public class MainView extends PageBase {
             else
                 button.addMouseListener(getButtonMouseListener(button, searchButtonPressedColor, searchButtonRolloverColor));
 
-            // image button 설정
-            button.setFocusPainted(false);
-            button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
-            button.setForeground(Color.BLACK);
-            button.setVerticalTextPosition(SwingConstants.BOTTOM);
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
+            // image button 초기화
+            initializeImageButton(button);
         }
     }
 
