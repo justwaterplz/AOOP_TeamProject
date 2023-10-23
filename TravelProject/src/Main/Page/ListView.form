@@ -23,8 +23,9 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <icon value="Main/Image/arrowback.png"/>
               <margin top="0" left="0" bottom="0" right="0"/>
-              <text value="뒤로가기"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

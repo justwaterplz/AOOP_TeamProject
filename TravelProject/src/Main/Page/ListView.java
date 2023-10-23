@@ -50,6 +50,13 @@ public class ListView extends PageBase {
 
         // 액션 리스너 등록
         backButton.addActionListener(e -> listener.returnToPrevPage());
+        // image button 설정        
+        backButton.setFocusPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setForeground(Color.BLACK);
+        backButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 
     @Override

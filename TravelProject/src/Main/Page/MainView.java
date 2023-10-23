@@ -31,6 +31,7 @@ public class MainView extends PageBase {
         for (JButton button : actionButtons) {
             button.addActionListener(new ButtonActionListener());
 
+            // image button 설정
             button.setFocusPainted(false);
             button.setContentAreaFilled(false);
             button.setBorderPainted(false);
