@@ -1,6 +1,7 @@
 package Main.Page;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -29,9 +30,15 @@ public class MainView extends PageBase {
         // 버튼 리스너 등록
         for (JButton button : actionButtons) {
             button.addActionListener(new ButtonActionListener());
+
+            button.setFocusPainted(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.setForeground(Color.BLACK);
+            button.setVerticalTextPosition(SwingConstants.BOTTOM);
+            button.setHorizontalTextPosition(SwingConstants.CENTER);
         }
     }
-
 
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
