@@ -17,6 +17,10 @@ public class ListView extends PageBase {
 
     private ArrayList<JButton> buttonList = new ArrayList<>();
     private ArrayList<Model관광지> touristSpotList = new ArrayList<>();
+    private final Color backButtonPressedColor = new Color(255, 0, 0);
+    private final Color backButtonRolloverColor = new Color(0, 255, 0);
+    private final Color listButtonPressedColor = new Color(255, 0, 0);
+    private final Color listButtonRolloverColor = new Color(0, 255, 255);
 
     public ListView(PageChangeListener _listener, Map<String,String> filterData) {
         super(_listener);
@@ -36,6 +40,9 @@ public class ListView extends PageBase {
             button.setPreferredSize(new Dimension(30, 100));
             button.setMargin(new Insets(0, 8, 0, 8));
             listPanel.add(button);
+
+            // button mouse listener 등록
+            button.addMouseListener(getButtonMouseListener(button, listButtonPressedColor, listButtonRolloverColor));
         }
 
         // 가져온 정보가 없을 때 표시
@@ -49,6 +56,7 @@ public class ListView extends PageBase {
 
         // 액션 리스너 등록
         backButton.addActionListener(e -> listener.returnToPrevPage());
+        backButton.addMouseListener(getButtonMouseListener(backButton, backButtonPressedColor, backButtonRolloverColor));
         // image button 설정        
         backButton.setFocusPainted(false);
         backButton.setContentAreaFilled(false);

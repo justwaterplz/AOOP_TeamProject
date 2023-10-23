@@ -27,10 +27,10 @@ public class MainView extends PageBase {
     private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, indoorButton, outdoorButton};
 
     // button background color
-    Color themeButtonPressed = new Color(255, 0, 0);
-    Color themeButtonRollOver = new Color(230, 247, 255);
-    Color searchButtonPressed = new Color(0, 255, 0);
-    Color searchButtonRollover = new Color(230, 247, 0);
+    private final Color themeButtonPressedColor = new Color(255, 0, 0);
+    private final Color themeButtonRolloverColor = new Color(230, 247, 255);
+    private final Color searchButtonPressedColor = new Color(0, 255, 0);
+    private final Color searchButtonRolloverColor = new Color(230, 247, 0);
 
     public MainView(PageChangeListener _listener) {
         super(_listener);
@@ -41,9 +41,9 @@ public class MainView extends PageBase {
 
             // button mouse listener 등록
             if (button != searchButton)
-                button.addMouseListener(getButtonMouseListener(button, themeButtonPressed, themeButtonRollOver));
+                button.addMouseListener(getButtonMouseListener(button, themeButtonPressedColor, themeButtonRolloverColor));
             else
-                button.addMouseListener(getButtonMouseListener(button, searchButtonPressed, searchButtonRollover));
+                button.addMouseListener(getButtonMouseListener(button, searchButtonPressedColor, searchButtonRolloverColor));
 
             // image button 설정
             button.setFocusPainted(false);
