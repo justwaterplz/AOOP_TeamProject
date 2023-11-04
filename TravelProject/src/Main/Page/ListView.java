@@ -4,8 +4,6 @@ import Main.Model.Model관광지;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -46,6 +44,7 @@ public class ListView extends PageBase {
             // image button 초기화
             // TODO : image button이 아니라면 그에 대응되는 메소드 호출로 변경
             initializeImageButton(button);
+            button.addActionListener(e -> listener.onPageChanged(new TouristSpotDetailView(listener,touristSpot).getMainPanel()));
         }
 
         // 가져온 정보가 없을 때 표시
