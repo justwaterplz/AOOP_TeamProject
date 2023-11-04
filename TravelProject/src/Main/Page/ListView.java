@@ -4,8 +4,6 @@ import Main.Model.Model관광지;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -37,6 +35,7 @@ public class ListView extends PageBase {
             button.setPreferredSize(new Dimension(30, 100));
             button.setMargin(new Insets(0, 8, 0, 8));
             listPanel.add(button);
+            button.addActionListener(e -> listener.onPageChanged(new TouristSpotDetailView(listener,touristSpot).getMainPanel()));
         }
 
         // 가져온 정보가 없을 때 표시
