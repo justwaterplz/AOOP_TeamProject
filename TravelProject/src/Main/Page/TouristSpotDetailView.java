@@ -49,7 +49,7 @@ public class TouristSpotDetailView extends PageBase {
             String locationApiURL = getLocationApiURL();
             Document doc = getLocationDocument(locationApiURL);
 
-            // doc로부터 XPath로 값을 추출하여
+            // doc로부터 XPath로 값을 추출하여 위치 설정
             String locationName = getLocationName(doc);
             locationLabel.setText(locationName);
 
