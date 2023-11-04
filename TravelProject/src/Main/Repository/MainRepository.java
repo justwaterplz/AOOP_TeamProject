@@ -1,5 +1,5 @@
 package Main.Repository;
-import Main.ConnectionPool;
+import Main.Module.ConnectionPool;
 import Main.Model.Model관광지;
 import Main.Model.Model테마;
 
