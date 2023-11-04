@@ -24,7 +24,8 @@
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
-              <text value="뒤로가기"/>
+              <icon value="Main/Image/arrowback.png"/>
+              <text value=""/>
             </properties>
           </component>
           <component id="d814" class="javax.swing.JLabel" binding="touristSpotNameLabel">

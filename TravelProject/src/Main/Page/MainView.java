@@ -1,11 +1,14 @@
 package Main.Page;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainView extends PageBase {
     private JPanel mainPanel;
@@ -19,10 +22,15 @@ public class MainView extends PageBase {
     private JButton th05Button;
     private JButton th06Button;
     private JButton searchButton;
-    private JButton insideButton;
-    private JButton outsideButton;
-    private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, insideButton, outsideButton};
-    private JPanel prevPanel;
+    private JButton indoorButton;
+    private JButton outdoorButton;
+    private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, indoorButton, outdoorButton};
+
+    // button background color
+    private final Color themeButtonPressedColor = new Color(204, 239, 255);
+    private final Color themeButtonRolloverColor = new Color(230, 247, 255);
+    private final Color searchButtonPressedColor = new Color(56, 224, 221);
+    private final Color searchButtonRolloverColor = new Color(56, 224, 221);
 
     public MainView(PageChangeListener _listener) {
         super(_listener);
@@ -31,12 +39,14 @@ public class MainView extends PageBase {
         for (JButton button : actionButtons) {
             button.addActionListener(new ButtonActionListener());
 
-            button.setFocusPainted(false);
-            button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
-            button.setForeground(Color.BLACK);
-            button.setVerticalTextPosition(SwingConstants.BOTTOM);
-            button.setHorizontalTextPosition(SwingConstants.CENTER);
+            // button mouse listener 등록
+            if (button != searchButton)
+                button.addMouseListener(getButtonMouseListener(button, themeButtonPressedColor, themeButtonRolloverColor));
+            else
+                button.addMouseListener(getButtonMouseListener(button, searchButtonPressedColor, searchButtonRolloverColor));
+
+            // image button 초기화
+            initializeImageButton(button);
         }
     }
 
@@ -68,10 +78,10 @@ public class MainView extends PageBase {
             } else if (clickedButton == th06Button) {   // "체험학습산업"
                 filterData.put("FilterType","테마");
                 filterData.put("FilterData","TH06");
-            } else if (clickedButton == insideButton) { // "실내"
+            } else if (clickedButton == indoorButton) { // "실내"
                 filterData.put("FilterType","실내외");
                 filterData.put("FilterData","실내");
-            } else if (clickedButton == outsideButton) {  // "실외"
+            } else if (clickedButton == outdoorButton) {  // "실외"
                 filterData.put("FilterType","실내외");
                 filterData.put("FilterData","실외");
             }

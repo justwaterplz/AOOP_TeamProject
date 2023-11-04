@@ -59,6 +59,9 @@ public class TouristSpotDetailView extends PageBase {
 
         // 액션 리스너 등록
         backButton.addActionListener(e -> listener.returnToPrevPage());
+        backButton.addMouseListener(getButtonMouseListener(backButton, backButtonPressedColor, backButtonRolloverColor));
+        // image button 초기화
+        initializeImageButton(backButton);
     }
 
     private void renderTouristSpotDetails(Model관광지 touristSpot) {

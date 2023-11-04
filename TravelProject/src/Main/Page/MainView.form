@@ -15,7 +15,10 @@
         </constraints>
         <properties>
           <background color="-14895436"/>
-          <toolTipText value="지역을 입력해보세요"/>
+          <enabled value="true"/>
+          <focusTraversalPolicyProvider value="false"/>
+          <focusable value="true"/>
+          <toolTipText value=""/>
         </properties>
         <border type="none"/>
         <children>
@@ -27,7 +30,8 @@
             </constraints>
             <properties>
               <text value="인천"/>
-              <toolTipText value=""/>
+              <toolTipText value="지역을 입력해보세요"/>
+              <verifyInputWhenFocusTarget value="true"/>
             </properties>
           </component>
           <component id="7e6af" class="javax.swing.JButton" binding="searchButton">
@@ -35,7 +39,8 @@
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="검색"/>
+              <icon value="Main/Image/search.png"/>
+              <text value=""/>
             </properties>
           </component>
         </children>
@@ -53,15 +58,16 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <borderPainted value="false"/>
-              <contentAreaFilled value="false"/>
-              <focusPainted value="false"/>
+              <background color="-13947600"/>
+              <borderPainted value="true"/>
+              <contentAreaFilled value="true"/>
+              <focusPainted value="true"/>
               <foreground color="-16777216"/>
-              <horizontalTextPosition value="0"/>
+              <horizontalTextPosition value="11"/>
               <icon value="Main/Image/th01.png"/>
               <text value="문화/예술"/>
               <verticalAlignment value="0"/>
-              <verticalTextPosition value="3"/>
+              <verticalTextPosition value="0"/>
             </properties>
           </component>
           <component id="2ca2b" class="javax.swing.JButton" binding="th02Button">
@@ -110,7 +116,7 @@
               <text value="쇼핑/놀이"/>
             </properties>
           </component>
-          <component id="83675" class="javax.swing.JButton" binding="insideButton">
+          <component id="83675" class="javax.swing.JButton" binding="indoorButton">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -119,7 +125,7 @@
               <text value="실내"/>
             </properties>
           </component>
-          <component id="d418b" class="javax.swing.JButton" binding="outsideButton">
+          <component id="d418b" class="javax.swing.JButton" binding="outdoorButton">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
