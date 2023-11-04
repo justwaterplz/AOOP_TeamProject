@@ -1,18 +1,15 @@
 package Main.Page;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class MainView extends PageBase {
     private JPanel mainPanel;
-    private JPanel searchPanel;
+    private JPanel topBarPanel;
     private JPanel themePanel;
     private JTextField searchTextField;
     private JButton th01Button;

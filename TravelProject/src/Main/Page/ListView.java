@@ -12,6 +12,7 @@ public class ListView extends PageBase {
     private JPanel listPanel;
     private JButton backButton;
     private JScrollPane scrollPane;
+    private JPanel topBarPanel;
 
     private ArrayList<JButton> buttonList = new ArrayList<>();
     private ArrayList<Model관광지> touristSpotList = new ArrayList<>();
