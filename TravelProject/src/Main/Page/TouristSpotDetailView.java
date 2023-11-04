@@ -33,6 +33,7 @@ public class TouristSpotDetailView extends PageBase {
     private JButton backButton;
     private JLabel touristSpotNameLabel;
     private JLabel indoorOutdoorLabel;
+    private JPanel topBarPanel;
 
     public TouristSpotDetailView(PageChangeListener _listener, Model관광지 touristSpot) {
         super(_listener);
