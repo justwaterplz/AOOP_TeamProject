@@ -1,11 +1,12 @@
 package Main.Page;
 
 import javax.swing.*;
+import java.util.Stack;
 
 public class SwingController implements PageChangeListener {
     private final JFrame frame;
     private JPanel currentPage;
-    private JPanel prevPage;
+    private Stack<JPanel> pageStack;
 
     public SwingController() {
         frame = new JFrame("여행의 민족");
@@ -14,13 +15,14 @@ public class SwingController implements PageChangeListener {
         frame.pack();
         frame.setSize(500, 600);
         currentPage = new MainView(this).getMainPanel();
+        pageStack.push(currentPage);
         frame.add(currentPage);
         frame.setVisible(true);
     }
 
     @Override
     public void onPageChanged(JPanel newPage) {
-        prevPage = currentPage;
+        pageStack.push(newPage);
         currentPage = newPage;
         frame.getContentPane().removeAll();
         frame.getContentPane().add(currentPage);
@@ -30,7 +32,8 @@ public class SwingController implements PageChangeListener {
 
     @Override
     public void returnToPrevPage() {
-        currentPage = prevPage;
+        pageStack.pop();
+        currentPage = pageStack.peek();
         frame.getContentPane().removeAll();
         frame.getContentPane().add(currentPage);
         frame.getContentPane().revalidate();
