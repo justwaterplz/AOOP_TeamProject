@@ -15,10 +15,8 @@ public class ListView extends PageBase {
 
     private ArrayList<JButton> buttonList = new ArrayList<>();
     private ArrayList<Model관광지> touristSpotList = new ArrayList<>();
-    private final Color backButtonPressedColor = new Color(255, 0, 0);
-    private final Color backButtonRolloverColor = new Color(0, 255, 0);
-    private final Color listButtonPressedColor = new Color(255, 0, 0);
-    private final Color listButtonRolloverColor = new Color(0, 255, 255);
+    private final Color listButtonPressedColor = new Color(204, 239, 255);
+    private final Color listButtonRolloverColor = new Color(230, 247, 255);
 
     public ListView(PageChangeListener _listener, Map<String,String> filterData) {
         super(_listener);

@@ -27,10 +27,10 @@ public class MainView extends PageBase {
     private JButton[] actionButtons = {th01Button, th02Button, th03Button, th04Button, th05Button, th06Button, searchButton, indoorButton, outdoorButton};
 
     // button background color
-    private final Color themeButtonPressedColor = new Color(255, 0, 0);
+    private final Color themeButtonPressedColor = new Color(204, 239, 255);
     private final Color themeButtonRolloverColor = new Color(230, 247, 255);
-    private final Color searchButtonPressedColor = new Color(0, 255, 0);
-    private final Color searchButtonRolloverColor = new Color(230, 247, 0);
+    private final Color searchButtonPressedColor = new Color(56, 224, 221);
+    private final Color searchButtonRolloverColor = new Color(56, 224, 221);
 
     public MainView(PageChangeListener _listener) {
         super(_listener);

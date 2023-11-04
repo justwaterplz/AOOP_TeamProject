@@ -13,6 +13,8 @@ import java.awt.event.MouseListener;
 abstract public class PageBase {
     protected PageChangeListener listener;
     protected final MainService mainService;
+    protected final Color backButtonPressedColor = new Color(56, 224, 221);
+    protected final Color backButtonRolloverColor = new Color(56, 224, 221);
 
     public PageBase(PageChangeListener listener) {
         this.mainService = new MainService();
