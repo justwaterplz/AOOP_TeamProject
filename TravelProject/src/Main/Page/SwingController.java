@@ -6,7 +6,7 @@ import java.util.Stack;
 public class SwingController implements PageChangeListener {
     private final JFrame frame;
     private JPanel currentPage;
-    private Stack<JPanel> pageStack;
+    private static Stack<JPanel> pageStack = new Stack<>();
 
     public SwingController() {
         frame = new JFrame("여행의 민족");
