@@ -1,6 +1,7 @@
 package Main.Page;
 
 import Main.Model.Model관광지;
+import Main.Module.ImageFinder;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -12,6 +13,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +31,14 @@ public class TouristSpotDetailView extends PageBase {
     private double longitude;
     private double latitude;
     private JPanel mainPanel;
-    private JLabel imageLabel;
+    private JLabel mapImageLabel;
     private JLabel locationLabel;
     private JButton backButton;
     private JLabel touristSpotNameLabel;
     private JLabel indoorOutdoorLabel;
+    private JLabel locationImageLabel;
     private JPanel topBarPanel;
+
 
     public TouristSpotDetailView(PageChangeListener _listener, Model관광지 touristSpot) {
         super(_listener);
@@ -41,10 +46,14 @@ public class TouristSpotDetailView extends PageBase {
         renderTouristSpotDetails(touristSpot);
 
         try{
-            // 위치 이미지 불러오기
+
+            // 위치 사진 이미지 불러오기
+            ImageFinder.searchAndDisplayImage(removeParentheses(touristSpot.관광지명()),locationImageLabel);
+
+            // 위치 네이버 맵 이미지 불러오기
             String imageApiURL = getImageApiURL();
             ImageIcon imageIcon = getImageIcon(imageApiURL);
-            imageLabel.setIcon(imageIcon);
+            mapImageLabel.setIcon(imageIcon);
 
             // 좌표로 위치 이름 불러오기
             String locationApiURL = getLocationApiURL();
@@ -52,7 +61,7 @@ public class TouristSpotDetailView extends PageBase {
 
             // doc로부터 XPath로 값을 추출하여 위치 설정
             String locationName = getLocationName(doc);
-            locationLabel.setText(locationName);
+            locationLabel.setText(locationName.isEmpty() ? removeParentheses(touristSpot.관광지명()) : locationName);
 
         } catch (Exception e){
             System.out.println("TouristSpotDetailView.TouristSpotDetailView:  " + e);
@@ -72,7 +81,6 @@ public class TouristSpotDetailView extends PageBase {
         touristSpotNameLabel.setText(touristSpot.관광지명().toString());
         indoorOutdoorLabel.setText(touristSpot.실내구분());
     }
-
 
     private String getLocationName(Document doc) throws XPathExpressionException {
         XPathFactory xPathFactory = XPathFactory.newInstance();
@@ -118,7 +126,10 @@ public class TouristSpotDetailView extends PageBase {
         imageCon.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientId);
         imageCon.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
         InputStream imageInputStream = imageCon.getInputStream();
-        ImageIcon imageIcon = new ImageIcon(ImageIO.read(imageInputStream));
+
+        BufferedImage image = ImageIO.read(imageInputStream);
+        ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
+
         return imageIcon;
     }
 
@@ -135,9 +146,18 @@ public class TouristSpotDetailView extends PageBase {
         return imageApiURL;
     }
 
+    // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거
+    public static String removeParentheses(String input) {
+        return input.replaceAll("\\([^\\)]*\\)", "").trim();
+    }
+
     @Override
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
 

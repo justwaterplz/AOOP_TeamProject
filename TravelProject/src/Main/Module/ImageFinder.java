@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class ImageFinder {
         SwingUtilities.invokeLater(() -> {
             try {
                 BufferedImage image = loadImage(imageUrl);
-                ImageIcon icon = new ImageIcon(image);
+                ImageIcon icon = new ImageIcon(image.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
                 imageLabel.setIcon(icon);
             } catch (IOException e) {
                 e.printStackTrace();
