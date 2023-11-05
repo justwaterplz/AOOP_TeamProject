@@ -59,11 +59,7 @@ public class TouristSpotDetailView extends PageBase {
 
             // doc로부터 XPath로 값을 추출하여 위치 설정
             String locationName = getLocationName(doc);
-            if(locationName.isEmpty()) {
-                locationLabel.setText(removeParentheses(touristSpot.관광지명()));
-            } else {
-                locationLabel.setText(locationName);
-            }
+            locationLabel.setText(locationName.isEmpty() ? removeParentheses(touristSpot.관광지명()) : locationName);
 
         } catch (Exception e){
             System.out.println("TouristSpotDetailView.TouristSpotDetailView:  " + e);
