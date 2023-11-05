@@ -3,8 +3,8 @@ package Main.Module;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,7 +20,7 @@ public class ConnectionPool {
         }
     }
 
-    private final List<Connection> pool = new ArrayList<>();
+    private final Queue<Connection> pool = new LinkedList<>();
     private final Lock lock = new ReentrantLock();
 
     // 싱글턴
@@ -30,7 +30,7 @@ public class ConnectionPool {
 
     private ConnectionPool(int initialSize) throws SQLException {
         for (int i = 0; i < initialSize; i++) {
-            pool.add(createNewConnection());
+            pool.offer(createNewConnection());
         }
     }
 
@@ -40,8 +40,8 @@ public class ConnectionPool {
             if (pool.isEmpty()) {
                 return createNewConnection();
             }
-            Connection connection = pool.remove(pool.size() - 1);
-            if (connection.isClosed()) {
+            Connection connection = pool.poll();
+            if (connection == null || connection.isClosed()) {
                 return getConnection();
             }
             return connection;
@@ -57,7 +57,7 @@ public class ConnectionPool {
         lock.lock();
         try {
             if (connection != null) {
-                pool.add(connection);
+                pool.offer(connection);
             }
         } finally {
             lock.unlock();
@@ -65,6 +65,7 @@ public class ConnectionPool {
     }
 
     private Connection createNewConnection() throws SQLException {
+        // ... 여기는 동일하게 DB 연결 생성 로직 ...
         String dbUrl = "jdbc:mysql://localhost:3306/main";
         String user = "root";
         String password = "root";
