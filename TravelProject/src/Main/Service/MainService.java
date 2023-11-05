@@ -23,9 +23,6 @@ import java.util.ArrayList;
 
 public class MainService {
     private final MainRepository mainRepository;
-    private String clientId = "62xhbr8jjh";
-    private String clientSecret = "mYxnTmAJz1psgRwuC3lqiO8C3v7QkH3MSItXtGRp";
-
     public MainService() {
         this. mainRepository = new MainRepository();
     }
