@@ -2,6 +2,8 @@ package Main.Page;
 
 import Main.Model.Model관광지;
 import Main.Module.ImageFinder;
+import Main.Service.LocateService;
+import Main.Service.MainService;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ import java.io.InputStreamReader;
 public class TouristSpotDetailView extends PageBase {
 
     BufferedReader io = new BufferedReader(new InputStreamReader(System.in));
+    private final LocateService locateService = new LocateService();
     private double longitude;
     private double latitude;
     private JPanel mainPanel;
@@ -30,21 +33,20 @@ public class TouristSpotDetailView extends PageBase {
         renderTouristSpotDetails(touristSpot);
 
         try{
-
             // 위치 사진 이미지 불러오기
             ImageFinder.searchAndDisplayImage(removeParentheses(touristSpot.관광지명()),locationImageLabel);
 
-            // 위치 네이버 맵 이미지 불러오기
-            String imageApiURL = mainService.getImageApiURL(longitude,latitude);
-            ImageIcon imageIcon = mainService.getImageIcon(imageApiURL);
+            // 네이버 맵 이미지 불러오기
+            String imageApiURL = locateService.getImageApiURL(longitude,latitude);
+            ImageIcon imageIcon = locateService.getImageIcon(imageApiURL);
             mapImageLabel.setIcon(imageIcon);
 
-            // 좌표로 위치 이름 불러오기
-            String locationApiURL = mainService.getLocationApiURL(longitude,latitude);
-            Document doc = mainService.getLocationDocument(locationApiURL);
+            // 위도,경도로부터 위치 Doc 불러오기
+            String locationApiURL = locateService.getLocationApiURL(longitude,latitude);
+            Document doc = locateService.getLocationDocument(locationApiURL);
 
-            // doc로부터 XPath로 값을 추출하여 위치 설정
-            String locationName = mainService.getLocationName(doc);
+            // Doc로부터 XPath로 값을 추출하여 위치 설정
+            String locationName = locateService.getLocationName(doc);
             locationLabel.setText(locationName.isEmpty() ? removeParentheses(touristSpot.관광지명()) : locationName);
 
         } catch (Exception e){
