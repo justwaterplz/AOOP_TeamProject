@@ -1,15 +1,23 @@
 package Main.Page;
 
+import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
+import Main.Service.MainService;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class helloView {
+public class helloView extends Frame{
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
@@ -22,14 +30,18 @@ public class helloView {
     private JPanel filteringPanel;
     private GridBagConstraints gbc;
     private JCheckBox favoriteCheckBox;
-    private JCheckBox historyCheckBox;
-    private JCheckBox cultureCheckBox;
-    private JCheckBox natureCheckBox;
-    private JCheckBox experienceCheckBox;
-    private JCheckBox campingCheckBox;
-    private JCheckBox shoppingCheckBox;
-    private JCheckBox indoorCheckBox;
-    private JCheckBox outdoorCheckBox;
+    private JCheckBox TH01CheckBox;
+    private JCheckBox TH02CheckBox;
+    private JCheckBox TH03CheckBox;
+    private JCheckBox TH04CheckBox;
+    private JCheckBox TH05CheckBox;
+    private JCheckBox TH06CheckBox;
+
+    private ButtonGroup indoorOutdoorButtonGroup;
+    private JRadioButton indoorButton;
+    private JRadioButton outdoorButton;
+    private JRadioButton indoorOutdoorButton;
+
 
     private JPanel searchPanel;
     private JTextField searchField;
@@ -42,7 +54,10 @@ public class helloView {
     private JTabbedPane tabbedPane;
     private JPanel actionPanel;
 
+    private final MainService mainService;
+
     public helloView() {
+        this.mainService = new MainService();
         initializeUI();
     }
 
@@ -90,12 +105,15 @@ public class helloView {
 
         // 하단 체크박스들
         JPanel bottomFilterPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        historyCheckBox = new JCheckBox("종교/역사/전통");
-        bottomFilterPanel1.add(historyCheckBox);
-        cultureCheckBox = new JCheckBox("문화/예술");
-        bottomFilterPanel1.add(cultureCheckBox);
-        natureCheckBox = new JCheckBox("자연/힐링");
-        bottomFilterPanel1.add(natureCheckBox);
+        TH04CheckBox = new JCheckBox("종교/역사/전통");
+        TH04CheckBox.setSelected(true);
+        bottomFilterPanel1.add(TH04CheckBox);
+        TH01CheckBox = new JCheckBox("문화/예술");
+        TH01CheckBox.setSelected(true);
+        bottomFilterPanel1.add(TH01CheckBox);
+        TH02CheckBox = new JCheckBox("자연/힐링");
+        TH02CheckBox.setSelected(true);
+        bottomFilterPanel1.add(TH02CheckBox);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -103,12 +121,15 @@ public class helloView {
 
         // 하단 체크박스들
         JPanel bottomFilterPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        experienceCheckBox = new JCheckBox("체험/학습/산업");
-        bottomFilterPanel2.add(experienceCheckBox);
-        campingCheckBox = new JCheckBox("캠핑/스포츠");
-        bottomFilterPanel2.add(campingCheckBox);
-        shoppingCheckBox = new JCheckBox("쇼핑/놀이");
-        bottomFilterPanel2.add(shoppingCheckBox);
+        TH06CheckBox = new JCheckBox("체험/학습/산업");
+        TH06CheckBox.setSelected(true);
+        bottomFilterPanel2.add(TH06CheckBox);
+        TH03CheckBox = new JCheckBox("캠핑/스포츠");
+        TH03CheckBox.setSelected(true);
+        bottomFilterPanel2.add(TH03CheckBox);
+        TH05CheckBox = new JCheckBox("쇼핑/놀이");
+        TH05CheckBox.setSelected(true);
+        bottomFilterPanel2.add(TH05CheckBox);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -116,10 +137,19 @@ public class helloView {
 
         // 하단 체크박스들
         JPanel bottomFilterPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        indoorCheckBox = new JCheckBox("실내");
-        bottomFilterPanel3.add(indoorCheckBox);
-        outdoorCheckBox = new JCheckBox("실외");
-        bottomFilterPanel3.add(outdoorCheckBox);
+        indoorButton = new JRadioButton("실내");
+        outdoorButton = new JRadioButton("실외");
+        indoorOutdoorButton = new JRadioButton("모두");
+
+        indoorOutdoorButtonGroup = new ButtonGroup();
+        indoorOutdoorButtonGroup.add(indoorButton);
+        indoorOutdoorButtonGroup.add(outdoorButton);
+        indoorOutdoorButtonGroup.add(indoorOutdoorButton);
+
+        indoorButton.setSelected(true);
+        bottomFilterPanel3.add(indoorButton);
+        bottomFilterPanel3.add(outdoorButton);
+        bottomFilterPanel3.add(indoorOutdoorButton);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
@@ -130,11 +160,12 @@ public class helloView {
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         searchField = new JTextField(20);
-        searchField.setFont(new Font("Arial", Font.PLAIN, 14));
+        searchField.setFont(new Font("NanumGothic", Font.PLAIN, 14));
         searchField.setBackground(new Color(255, 255, 255));  // 배경색 설정
         searchField.setBorder(BorderFactory.createLineBorder(Color.BLACK));  // 테두리 설정
 
         searchButton = new JButton("검색");
+        searchButton.addActionListener(new ButtonActionListener());
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
@@ -172,21 +203,36 @@ public class helloView {
         bottomPanel.add(searchResultLabel, BorderLayout.NORTH);
 
         // 검색 버튼 누르면 실행되야하는 표 생성 임시함수
-        createTable();
+        createTable(null);
 
     }
 
     // 표 생성 data는 임시로 했지만 검색버튼 누르면 저장소로부터 불러와야함
-    private void createTable() {
+    private void createTable(ArrayList<Model관광지> touristSpotList) {
+
+        bottomPanel.removeAll();
+
         // 표 데이터
         String[] columnNames = {"관광지명", "지역", "실내/외"};
 
-        // 임시 데이터
-        Object[][] data = {
-                {"아이템1", "실내", "A구분", "서울"},
-                {"아이템2", "외부", "B구분", "부산"},
-        };
-
+        Object[][] data;
+        if(touristSpotList == null){
+            data = null;
+        } else {
+            data = new Object[touristSpotList.size()][3];
+            for (int i = 0; i < touristSpotList.size(); i++) {
+                Model관광지 touristSpot = touristSpotList.get(i);
+                // 괄호를 제거한 관광지명
+                String cleanName = removeParentheses(touristSpot.get관광지명());
+                // 괄호 안의 내용
+                String parenthesesContent = extractParenthesesContent(touristSpot.get관광지명());
+                // 실내구분
+                String indoorType = touristSpot.get실내구분();
+                // 데이터 배열에 할당
+                data[i] = new Object[]{cleanName, parenthesesContent, indoorType};
+                System.out.println(data[i][0]+" "+ data[i][1]+" "+data[i][2]);
+            }
+        }
         // 표 모델 생성
         NonEditableTableModel tableModel = new NonEditableTableModel(data, columnNames);
 
@@ -221,6 +267,10 @@ public class helloView {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         table.setFillsViewportHeight(true);
         bottomPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // 컴포넌트를 다시 그리도록 갱신
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
     }
 
     // 상세정보 패널
@@ -262,6 +312,43 @@ public class helloView {
         return panel;
     }
 
+
+    // 버튼 액션 리스너
+    private class ButtonActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton clickedButton = (JButton) e.getSource();
+
+            if (clickedButton == searchButton) {  // "검색"
+                Map<String, Object> filterData = new HashMap<>();
+                filterData.put("favoriteChecked", favoriteCheckBox.isSelected());
+                filterData.put("TH01Checked", TH01CheckBox.isSelected());
+                filterData.put("TH02Checked", TH02CheckBox.isSelected());
+                filterData.put("TH03Checked", TH03CheckBox.isSelected());
+                filterData.put("TH04Checked", TH04CheckBox.isSelected());
+                filterData.put("TH05Checked", TH05CheckBox.isSelected());
+                filterData.put("TH06Checked", TH06CheckBox.isSelected());
+                filterData.put("isIndoorChecked", indoorButton.isSelected());
+                filterData.put("isOutdoorChecked", outdoorButton.isSelected());
+                filterData.put("isIndoorOutdoorChecked", indoorOutdoorButton.isSelected());
+                filterData.put("searchText", searchField.getText());
+
+                ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
+                createTable(touristSpotList);
+            }
+        }
+    }
+
+    // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거 (관광지명에서 이름만 빼오기)
+    public static String removeParentheses(String input) {
+        return input.replaceAll("\\([^\\)]*\\)", "").trim();
+    }
+
+    // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거 (관광지명에서 지역만 빼오기)
+    public static String extractParenthesesContent(String input) {
+        Matcher matcher = Pattern.compile("\\(([^)]+)\\)").matcher(input);
+        return matcher.find() ? matcher.group(1).trim() : "";
+    }
 
     public JPanel getMainPanel() {
         return mainPanel;
