@@ -4,20 +4,21 @@ import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
 import Main.Service.MainService;
 
+import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class helloView extends Frame{
+public class helloView extends JFrame{
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
@@ -47,12 +48,11 @@ public class helloView extends Frame{
     private JTextField searchField;
     private JButton searchButton;
 
-    private JPanel tabPanel;
-    private JPanel labelPanel;
-    private JLabel nameLabel;
-    private JLabel locationLabel;
-    private JTabbedPane tabbedPane;
-    private JPanel actionPanel;
+    private JPanel coursePanel;
+    private JTable courseTable;
+    private JPanel courseButtonPanel;
+    private JButton courseAddButton;
+    private JButton courseDeleteButton;
 
     private final MainService mainService;
 
@@ -63,7 +63,6 @@ public class helloView extends Frame{
 
     private void initializeUI() {
         mainPanel = new JPanel(new BorderLayout());
-
         /**
          * 상단 Panel에 컴포넌트 추가하는 부분
          */
@@ -177,13 +176,9 @@ public class helloView extends Frame{
         topPanel.add(filteringPanel, BorderLayout.WEST);
 
         /**
-         * 상세정보는 새로운 프레임에 추가 할 것 이므로 여기 아래를 코스리스트 관련으로 채우면 됨
-         * initDetailPanel()는 원래 우측하단 상세정보를 넣을(초기화 할) 임시 함수였음
+         * 코스 목록
          */
-        initDetailPanel();
-
-
-
+        createCourseTable();
 
         //  JSeparator(구분선) 추가
         JSeparator separator = new JSeparator();
@@ -205,9 +200,80 @@ public class helloView extends Frame{
         // 검색 버튼 누르면 실행되야하는 표 생성 임시함수
         createTable(null);
 
+        setTitle("여행의 민족");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        add(mainPanel);
+        //setSize(800, 600);
+        pack();
+        setVisible(true);
     }
 
-    // 표 생성 data는 임시로 했지만 검색버튼 누르면 저장소로부터 불러와야함
+    // 코스 목록 생성
+    private void createCourseTable() {
+        Vector<String> courseVector = new Vector<String>();
+        courseVector.add("코스 목록");
+
+        //defaultTableModel 생성
+        DefaultTableModel model = new DefaultTableModel(courseVector, 0){
+            public boolean isCellEditable(int r, int c){
+                return (c!=0) ? true : false;
+            }
+        };
+        
+        // 임시 데이터
+        Vector<String> v1 = new Vector<String>();
+        v1.add("내 코스1");
+        model.addRow(v1);
+        Vector<String> v2 = new Vector<String>();
+        v2.add("내 코스2");
+        model.addRow(v2);
+
+        courseTable = new JTable(model);
+        courseTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        // 단일 선택 모델로 변경
+        ListSelectionModel selectionModel = new DefaultListSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        courseTable.setSelectionModel(selectionModel);
+
+        // 표에 선택 리스너 추가
+        courseTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    // 선택된 행의 데이터를 출력 (예시)
+                    int selectedRow = courseTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        System.out.println(courseTable.getValueAt(selectedRow, 0));
+                    }
+                }
+            }
+        });
+
+        //  스크롤
+        JScrollPane scrollPane = new JScrollPane(courseTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(300, 200));
+
+        courseTable.setFillsViewportHeight(true);
+        coursePanel = new JPanel(new FlowLayout());
+        coursePanel.add(scrollPane);
+
+        //버튼 추가
+        courseButtonPanel = new JPanel(new GridLayout(0, 1));
+
+        courseAddButton = new JButton("코스 추가");
+        courseDeleteButton = new JButton("코스 삭제");
+        courseButtonPanel.add(courseAddButton);
+        courseButtonPanel.add(courseDeleteButton);
+
+        coursePanel.add(courseButtonPanel);
+
+        topPanel.add(coursePanel, BorderLayout.CENTER);
+    }
+
+    // 표 생성
     private void createTable(ArrayList<Model관광지> touristSpotList) {
 
         bottomPanel.removeAll();
@@ -271,37 +337,6 @@ public class helloView extends Frame{
         // 컴포넌트를 다시 그리도록 갱신
         bottomPanel.revalidate();
         bottomPanel.repaint();
-    }
-
-    // 상세정보 패널
-    private void initDetailPanel() {
-        tabPanel = new JPanel(new BorderLayout());
-
-        // 상단 레이블 2개
-        labelPanel = new JPanel(new GridLayout(1, 2));
-        nameLabel = new JLabel("63빌딩");
-        locationLabel = new JLabel("서울특별시 어디어디");
-
-        labelPanel.add(nameLabel);
-        labelPanel.add(locationLabel);
-
-        tabPanel.add(labelPanel, BorderLayout.NORTH);
-
-        // 사진 및 그래프 Tab Panel
-        tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("사진", createImagePanel("Image 1"));
-        tabbedPane.addTab("지도", createImagePanel("Image 2"));
-        tabbedPane.addTab("그래프", createImagePanel("Image 3"));
-
-        tabPanel.add(tabbedPane, BorderLayout.CENTER);
-
-        // 무언의 기능을 넣을 Panel
-        actionPanel = new JPanel(new BorderLayout());
-        actionPanel.add(new JLabel("기능넣을거임"), BorderLayout.CENTER);
-
-        tabPanel.add(actionPanel, BorderLayout.EAST);
-
-        topPanel.add(tabPanel, BorderLayout.CENTER);
     }
 
     // 각 탭에 이미지를 표시하는 패널 생성
