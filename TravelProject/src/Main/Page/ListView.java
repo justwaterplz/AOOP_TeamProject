@@ -27,7 +27,7 @@ public class ListView extends PageBase {
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 
         // 필터정보를 기준으로 TouristSpotList를 가져온다.
-        touristSpotList = mainService.findTouristSpots(filterData.get("FilterType"), filterData.get("FilterData"));
+        //touristSpotList = mainService.findTouristSpots(filterData.get("FilterType"), filterData.get("FilterData"));
 
         // 가져온 리스트들로 출력
         for (Model관광지 touristSpot : touristSpotList) {
