@@ -31,7 +31,7 @@ public class ListView extends PageBase {
 
         // 가져온 리스트들로 출력
         for (Model관광지 touristSpot : touristSpotList) {
-            JButton button = new JButton(touristSpot.관광지명()+ "  " + touristSpot.실내구분());
+            JButton button = new JButton(touristSpot.get관광지명()+ "  " + touristSpot.get실내구분());
             buttonList.add(button);
             button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
             button.setPreferredSize(new Dimension(30, 100));

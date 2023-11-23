@@ -57,7 +57,7 @@ public class MainRepository {
             pool.releaseConnection(conn);
         }
     }
-    public ArrayList<Model테마> get테마List() {
+  /*  public ArrayList<Model테마> get테마List() {
         Connection conn = pool.getConnection();
         if(conn == null) {
             System.out.println("Failed Get Connection");
@@ -92,7 +92,7 @@ public class MainRepository {
         } finally {
             pool.releaseConnection(conn);
         }
-    }
+    }*/
 
     public ArrayList<Model관광지> get관광지ListByTheme(String theme) {
         Connection conn = pool.getConnection();
@@ -232,7 +232,7 @@ public class MainRepository {
         }
     }
 
-    public ArrayList<Model코스> get코스List() {
+  /*  public ArrayList<Model코스> get코스List() {
         Connection conn = pool.getConnection();
         if(conn == null) {
             System.out.println("Failed Get Connection");
@@ -378,5 +378,5 @@ public class MainRepository {
         } finally {
             pool.releaseConnection(conn);
         }
-    }
+    }*/
 }

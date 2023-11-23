@@ -50,7 +50,7 @@ public class TouristSpotDetailView extends PageBase {
         try{
 
             // 위치 사진 이미지 불러오기
-            ImageFinder.searchAndDisplayImage(removeParentheses(touristSpot.관광지명()),locationImageLabel);
+            ImageFinder.searchAndDisplayImage(removeParentheses(touristSpot.get관광지명()),locationImageLabel);
 
             // 위치 네이버 맵 이미지 불러오기
             String imageApiURL = locateService.getImageApiURL(longitude,latitude);
@@ -63,7 +63,7 @@ public class TouristSpotDetailView extends PageBase {
 
             // doc로부터 XPath로 값을 추출하여 위치 설정
             String locationName = locateService.getLocationName(doc);
-            locationLabel.setText(locationName.isEmpty() ? removeParentheses(touristSpot.관광지명()) : locationName);
+            locationLabel.setText(locationName.isEmpty() ? removeParentheses(touristSpot.get관광지명()) : locationName);
 
         } catch (Exception e){
             System.out.println("TouristSpotDetailView.TouristSpotDetailView:  " + e);
@@ -78,10 +78,10 @@ public class TouristSpotDetailView extends PageBase {
 
     private void renderTouristSpotDetails(Model관광지 touristSpot) {
         // 위치의 이름 경도 위도 등을 받아온다.
-        longitude = touristSpot.경도().doubleValue();
-        latitude = touristSpot.위도().doubleValue();
-        touristSpotNameLabel.setText(touristSpot.관광지명().toString());
-        indoorOutdoorLabel.setText(touristSpot.실내구분());
+        longitude = touristSpot.get경도().doubleValue();
+        latitude = touristSpot.get위도().doubleValue();
+        touristSpotNameLabel.setText(touristSpot.get관광지명().toString());
+        indoorOutdoorLabel.setText(touristSpot.get실내구분());
     }
 
     // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거
