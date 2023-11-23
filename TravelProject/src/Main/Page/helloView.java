@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class helloView {
+public class helloView extends JFrame {
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
@@ -48,7 +48,6 @@ public class helloView {
 
     private void initializeUI() {
         mainPanel = new JPanel(new BorderLayout());
-
         /**
          * 상단 Panel에 컴포넌트 추가하는 부분
          */
@@ -174,6 +173,13 @@ public class helloView {
         // 검색 버튼 누르면 실행되야하는 표 생성 임시함수
         createTable();
 
+        setTitle("여행의 민족");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        add(mainPanel);
+        setSize(800, 600);
+        //pack();
+        setVisible(true);
     }
 
     // 표 생성 data는 임시로 했지만 검색버튼 누르면 저장소로부터 불러와야함
@@ -260,10 +266,5 @@ public class helloView {
         JLabel imageLabel = new JLabel(new ImageIcon(imageName + ".png"));
         panel.add(imageLabel, BorderLayout.CENTER);
         return panel;
-    }
-
-
-    public JPanel getMainPanel() {
-        return mainPanel;
     }
 }

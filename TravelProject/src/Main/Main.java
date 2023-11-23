@@ -23,15 +23,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-
-        JFrame frame = new JFrame("여행의 민족");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.pack();
-        frame.setSize(800, 600);
-        frame.add(new helloView().getMainPanel());
-        frame.setVisible(true);
-
-        //new SwingController();
+        // GUI
+        new helloView();
     }
 }
