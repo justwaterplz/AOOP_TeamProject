@@ -184,7 +184,6 @@ public class helloView extends JFrame{
         JSeparator separator = new JSeparator();
         topPanel.add(separator, BorderLayout.SOUTH);
 
-
         /**
          * 하단 Panel
          */
@@ -202,11 +201,23 @@ public class helloView extends JFrame{
 
         setTitle("여행의 민족");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         add(mainPanel);
-        //setSize(800, 600);
         pack();
+        setFrameLocationToCenter();
         setVisible(true);
+    }
+
+    // 프레임 정중앙을 화면 정중앙에 위치시킨다.
+    private void setFrameLocationToCenter() {
+        // 화면 크기 구하기
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // 프레임 크기 구하기
+        Dimension frameSize = getSize();
+        // 화면 중앙에 프레임 위치 계산
+        int x = (screenSize.width - frameSize.width) / 2;
+        int y = (screenSize.height - frameSize.height) / 2;
+        // 프레임 위치 설정
+        setLocation(x, y);
     }
 
     // 코스 목록 생성
