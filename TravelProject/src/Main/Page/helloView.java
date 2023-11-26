@@ -4,6 +4,7 @@ import Main.CourseDetail;
 import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
 import Main.Service.MainService;
+import Main.ViewControl;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
@@ -21,10 +22,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class helloView extends JFrame{
+public class helloView extends JFrame implements ViewControl {
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
+    private static JPanel backgroundGlassPanel;
     private JLabel searchResultLabel;
     private JTable table;
 
@@ -202,6 +204,10 @@ public class helloView extends JFrame{
         // 검색 버튼 누르면 실행되야하는 표 생성 임시함수
         createTable(null);
 
+        // 화면을 어둡게 만들기 위한 GlassPane 추가
+        addGreyOutGlassPane();
+
+        // 프레임 기본 설정
         setTitle("여행의 민족");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(mainPanel);
@@ -277,6 +283,7 @@ public class helloView extends JFrame{
 
                     if (row != -1) {
                         String courseName = (String) target.getValueAt(row, 0);
+                        darkenBackground(true);
                         new CourseDetail(courseName, thisFrame);
                     }
                 }
@@ -419,5 +426,30 @@ public class helloView extends JFrame{
 
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    // 화면을 어둡게 만들기 위한 GlassPane을 추가한다.
+    @Override
+    public void addGreyOutGlassPane() {
+        setGlassPane(new JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                // 명도를 조절하여 어둡게 만듭니다.
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2d.setColor(Color.BLACK);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        });
+        getGlassPane().setVisible(false);
+    }
+
+    @Override
+    public void darkenBackground(boolean isDarken) {
+        getGlassPane().setVisible(isDarken);
     }
 }

@@ -6,6 +6,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Vector;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class CourseDetail extends JDialog {
     private JLabel courseLabel;
@@ -21,7 +23,17 @@ public class CourseDetail extends JDialog {
         // 모달 다이얼로그 창 생성
         super(parentFrame, "", true);
 
-    public CourseDetail(String _courseName) {
+        // 다이얼로그가 닫힐 때 특정 작업 수행을 위한 WindowListener 추가
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ViewControl frame = (ViewControl)parentFrame;
+                if (frame != null) {
+                    frame.darkenBackground(false);
+                }
+            }
+        });
+
         setLayout(new BorderLayout());
 
         // 코스 이름
