@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LocateService {
+public class NaverApiService {
     private String clientId = "62xhbr8jjh";
     private String clientSecret = "mYxnTmAJz1psgRwuC3lqiO8C3v7QkH3MSItXtGRp";
 
@@ -71,7 +71,7 @@ public class LocateService {
         InputStream imageInputStream = imageCon.getInputStream();
 
         BufferedImage image = ImageIO.read(imageInputStream);
-        ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
+        ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(750, 600, Image.SCALE_SMOOTH));
 
         return imageIcon;
     }

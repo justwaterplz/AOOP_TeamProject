@@ -57,7 +57,7 @@ public class ImageFinder {
         SwingUtilities.invokeLater(() -> {
             try {
                 BufferedImage image = loadImage(imageUrl);
-                ImageIcon icon = new ImageIcon(image.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
+                ImageIcon icon = new ImageIcon(image.getScaledInstance(750, 600, Image.SCALE_SMOOTH));
                 imageLabel.setIcon(icon);
             } catch (IOException e) {
                 e.printStackTrace();

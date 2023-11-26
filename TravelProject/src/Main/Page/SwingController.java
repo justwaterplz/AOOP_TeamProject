@@ -1,6 +1,7 @@
 package Main.Page;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Stack;
 
 public class SwingController implements PageChangeListener {
@@ -13,10 +14,12 @@ public class SwingController implements PageChangeListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
-        frame.setSize(700, 600);
-        currentPage = new MainView(this).getMainPanel();
-        pageStack.push(currentPage);
-        frame.add(currentPage);
+        frame.setSize(800, 600);
+        //currentPage = new MainView(this).getMainPanel();
+
+        //pageStack.push(currentPage);
+
+        //frame.add(currentPage);
         frame.setVisible(true);
     }
 
