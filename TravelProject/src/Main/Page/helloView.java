@@ -216,19 +216,6 @@ public class helloView extends JFrame implements ViewControl {
         setVisible(true);
     }
 
-    // 프레임 정중앙을 화면 정중앙에 위치시킨다.
-    private void setFrameLocationToCenter() {
-        // 화면 크기 구하기
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        // 프레임 크기 구하기
-        Dimension frameSize = getSize();
-        // 화면 중앙에 프레임 위치 계산
-        int x = (screenSize.width - frameSize.width) / 2;
-        int y = (screenSize.height - frameSize.height) / 2;
-        // 프레임 위치 설정
-        setLocation(x, y);
-    }
-
     // 코스 목록 생성
     private void createCourseTable() {
         Vector<String> courseVector = new Vector<String>();
@@ -386,7 +373,6 @@ public class helloView extends JFrame implements ViewControl {
         return panel;
     }
 
-
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
         @Override
@@ -424,8 +410,17 @@ public class helloView extends JFrame implements ViewControl {
         return matcher.find() ? matcher.group(1).trim() : "";
     }
 
-    public JPanel getMainPanel() {
-        return mainPanel;
+    // 프레임 정중앙을 화면 정중앙에 위치시킨다.
+    private void setFrameLocationToCenter() {
+        // 화면 크기 구하기
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // 프레임 크기 구하기
+        Dimension frameSize = getSize();
+        // 화면 중앙에 프레임 위치 계산
+        int x = (screenSize.width - frameSize.width) / 2;
+        int y = (screenSize.height - frameSize.height) / 2;
+        // 프레임 위치 설정
+        setLocation(x, y);
     }
 
     // 화면을 어둡게 만들기 위한 GlassPane을 추가한다.
