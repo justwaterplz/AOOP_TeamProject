@@ -1,5 +1,6 @@
 package Main.Page;
 
+import Main.CourseDetail;
 import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
 import Main.Service.MainService;
@@ -11,6 +12,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,7 +231,7 @@ public class helloView extends JFrame{
         //defaultTableModel 생성
         DefaultTableModel model = new DefaultTableModel(courseVector, 0){
             public boolean isCellEditable(int r, int c){
-                return (c!=0) ? true : false;
+                return false;
             }
         };
         
@@ -257,6 +260,23 @@ public class helloView extends JFrame{
                     int selectedRow = courseTable.getSelectedRow();
                     if (selectedRow != -1) {
                         System.out.println(courseTable.getValueAt(selectedRow, 0));
+                    }
+                }
+            }
+        });
+
+        // 표에 마우스 리스너 추가
+        courseTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 더블 클릭하면 코스 창 띄우기
+                if (e.getClickCount() == 2) {
+                    JTable target = (JTable) e.getSource();
+                    int row = target.getSelectedRow();
+
+                    if (row != -1) {
+                        String courseName = (String) target.getValueAt(row, 0);
+                        new CourseDetail(courseName);
                     }
                 }
             }
