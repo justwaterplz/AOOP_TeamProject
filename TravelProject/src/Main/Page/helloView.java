@@ -265,6 +265,7 @@ public class helloView extends JFrame{
             }
         });
 
+        JFrame thisFrame = this;
         // 표에 마우스 리스너 추가
         courseTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -276,7 +277,7 @@ public class helloView extends JFrame{
 
                     if (row != -1) {
                         String courseName = (String) target.getValueAt(row, 0);
-                        new CourseDetail(courseName);
+                        new CourseDetail(courseName, thisFrame);
                     }
                 }
             }

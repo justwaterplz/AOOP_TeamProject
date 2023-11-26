@@ -10,6 +10,16 @@ import java.util.Vector;
 public class CourseDetail extends JDialog {
     private JLabel courseLabel;
     private JTable listTable;
+    private JPanel buttonPanel;
+    private JButton courseNameChangeButton;
+    private JButton tourSpotDeleteButton;
+    private JButton upwardButton;
+    private JButton downwardButton;
+    private JButton saveButton;
+
+    public CourseDetail(String _courseName, JFrame parentFrame) {
+        // 모달 다이얼로그 창 생성
+        super(parentFrame, "", true);
 
     public CourseDetail(String _courseName) {
         setLayout(new BorderLayout());
@@ -72,12 +82,30 @@ public class CourseDetail extends JDialog {
         //  스크롤
         JScrollPane scrollPane = new JScrollPane(listTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        //scrollPane.setPreferredSize(new Dimension(300, 200));
+        scrollPane.setPreferredSize(new Dimension(500, 300));
 
         listTable.setFillsViewportHeight(true);
         add(scrollPane, BorderLayout.CENTER);
 
-        setSize(300, 200);
+        //버튼 추가
+        buttonPanel = new JPanel(new GridLayout(0, 1));
+
+        courseNameChangeButton = new JButton("코스 이름 변경");
+        tourSpotDeleteButton = new JButton("관광지 삭제");
+        upwardButton = new JButton("Up");
+        downwardButton = new JButton("Down");
+        saveButton = new JButton("저장");
+
+        buttonPanel.add(courseNameChangeButton);
+        buttonPanel.add(tourSpotDeleteButton);
+        buttonPanel.add(upwardButton);
+        buttonPanel.add(downwardButton);
+        buttonPanel.add(saveButton);
+
+        add(buttonPanel, BorderLayout.EAST);
+
+        // 다이얼로그 기본 설정
+        pack();
         setFrameLocationToCenter();
         setVisible(true);
     }
