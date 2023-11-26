@@ -2,15 +2,20 @@ package Main.Page;
 
 import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
+import Main.Module.SpotNameManager;
 import Main.Service.MainService;
+import org.xml.sax.SAXException;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,8 +202,8 @@ public class helloView extends JFrame{
         searchResultLabel.setHorizontalAlignment(JLabel.CENTER);
         bottomPanel.add(searchResultLabel, BorderLayout.NORTH);
 
-        // 검색 버튼 누르면 실행되야하는 표 생성 임시함수
-        createTable(null);
+        // 검색 버튼 누르면 실행되야하는 표 임시 생성
+        createSpotTable(null);
 
         setTitle("여행의 민족");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -274,7 +279,7 @@ public class helloView extends JFrame{
     }
 
     // 표 생성
-    private void createTable(ArrayList<Model관광지> touristSpotList) {
+    private void createSpotTable(ArrayList<Model관광지> touristSpotList) {
 
         bottomPanel.removeAll();
 
@@ -289,14 +294,13 @@ public class helloView extends JFrame{
             for (int i = 0; i < touristSpotList.size(); i++) {
                 Model관광지 touristSpot = touristSpotList.get(i);
                 // 괄호를 제거한 관광지명
-                String cleanName = removeParentheses(touristSpot.get관광지명());
+                String cleanName = SpotNameManager.getSpotName(touristSpot.get관광지명());
                 // 괄호 안의 내용
-                String parenthesesContent = extractParenthesesContent(touristSpot.get관광지명());
+                String parenthesesContent = SpotNameManager.getSpotLocate(touristSpot.get관광지명());
                 // 실내구분
                 String indoorType = touristSpot.get실내구분();
                 // 데이터 배열에 할당
                 data[i] = new Object[]{cleanName, parenthesesContent, indoorType};
-                System.out.println(data[i][0]+" "+ data[i][1]+" "+data[i][2]);
             }
         }
         // 표 모델 생성
@@ -316,11 +320,12 @@ public class helloView extends JFrame{
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    // 선택된 행의 데이터를 출력 (예시)
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
-                        for (int i = 0; i < table.getColumnCount(); i++) {
-                            System.out.print(table.getValueAt(selectedRow, i) + " ");
+                        try {
+                            new SpotDetailView(touristSpotList.get(selectedRow));
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
                         }
                         System.out.println();
                     }
@@ -338,15 +343,6 @@ public class helloView extends JFrame{
         bottomPanel.revalidate();
         bottomPanel.repaint();
     }
-
-    // 각 탭에 이미지를 표시하는 패널 생성
-    private JPanel createImagePanel(String imageName) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel imageLabel = new JLabel(new ImageIcon(imageName + ".png"));
-        panel.add(imageLabel, BorderLayout.CENTER);
-        return panel;
-    }
-
 
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
@@ -369,20 +365,9 @@ public class helloView extends JFrame{
                 filterData.put("searchText", searchField.getText());
 
                 ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
-                createTable(touristSpotList);
+                createSpotTable(touristSpotList);
             }
         }
-    }
-
-    // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거 (관광지명에서 이름만 빼오기)
-    public static String removeParentheses(String input) {
-        return input.replaceAll("\\([^\\)]*\\)", "").trim();
-    }
-
-    // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거 (관광지명에서 지역만 빼오기)
-    public static String extractParenthesesContent(String input) {
-        Matcher matcher = Pattern.compile("\\(([^)]+)\\)").matcher(input);
-        return matcher.find() ? matcher.group(1).trim() : "";
     }
 
     public JPanel getMainPanel() {
