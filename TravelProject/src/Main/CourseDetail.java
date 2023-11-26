@@ -39,6 +39,13 @@ public class CourseDetail extends JDialog {
         // 코스 이름
         courseLabel = new JLabel(_courseName);
         courseLabel.setHorizontalAlignment(JLabel.CENTER);
+        // 폰트 크기 조절
+        Font originalFont = courseLabel.getFont();
+        Font newFont = originalFont.deriveFont(originalFont.getSize() * 1.3f); // 1.5배 크기로 조절
+        courseLabel.setFont(newFont);
+        // 상하좌우로 빈 공간 추가
+        courseLabel.setBorder(BorderFactory.createEmptyBorder(7, 0, 7, 0));
+
         add(courseLabel, BorderLayout.NORTH);
 
         // 코스에 포함된 관광지 목록
