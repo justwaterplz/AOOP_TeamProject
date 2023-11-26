@@ -1,21 +1,24 @@
 package Main.Page;
 
+import Main.CourseDetail;
 import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
 import Main.Module.SpotNameManager;
 import Main.Service.MainService;
-import org.xml.sax.SAXException;
+import Main.ViewControl;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +26,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class helloView extends JFrame{
+public class helloView extends JFrame implements ViewControl {
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
+    private static JPanel backgroundGlassPanel;
     private JLabel searchResultLabel;
     private JTable table;
 
@@ -189,7 +193,6 @@ public class helloView extends JFrame{
         JSeparator separator = new JSeparator();
         topPanel.add(separator, BorderLayout.SOUTH);
 
-
         /**
          * 하단 Panel
          */
@@ -205,12 +208,15 @@ public class helloView extends JFrame{
         // 검색 버튼 누르면 실행되야하는 표 임시 생성
         createSpotTable(null);
 
+        // 화면을 어둡게 만들기 위한 GlassPane 추가
+        addGreyOutGlassPane();
+
+        // 프레임 기본 설정
         setTitle("여행의 민족");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         add(mainPanel);
-        //setSize(800, 600);
         pack();
+        setFrameLocationToCenter();
         setVisible(true);
     }
 
@@ -222,7 +228,7 @@ public class helloView extends JFrame{
         //defaultTableModel 생성
         DefaultTableModel model = new DefaultTableModel(courseVector, 0){
             public boolean isCellEditable(int r, int c){
-                return (c!=0) ? true : false;
+                return false;
             }
         };
         
@@ -251,6 +257,25 @@ public class helloView extends JFrame{
                     int selectedRow = courseTable.getSelectedRow();
                     if (selectedRow != -1) {
                         System.out.println(courseTable.getValueAt(selectedRow, 0));
+                    }
+                }
+            }
+        });
+
+        JFrame thisFrame = this;
+        // 표에 마우스 리스너 추가
+        courseTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 더블 클릭하면 코스 창 띄우기
+                if (e.getClickCount() == 2) {
+                    JTable target = (JTable) e.getSource();
+                    int row = target.getSelectedRow();
+
+                    if (row != -1) {
+                        String courseName = (String) target.getValueAt(row, 0);
+                        darkenBackground(true);
+                        new CourseDetail(courseName, thisFrame);
                     }
                 }
             }
@@ -344,6 +369,15 @@ public class helloView extends JFrame{
         bottomPanel.repaint();
     }
 
+
+    // 각 탭에 이미지를 표시하는 패널 생성
+    private JPanel createImagePanel(String imageName) {
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel imageLabel = new JLabel(new ImageIcon(imageName + ".png"));
+        panel.add(imageLabel, BorderLayout.CENTER);
+        return panel;
+    }
+
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
         @Override
@@ -372,5 +406,43 @@ public class helloView extends JFrame{
 
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    // 프레임 정중앙을 화면 정중앙에 위치시킨다.
+    private void setFrameLocationToCenter() {
+        // 화면 크기 구하기
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // 프레임 크기 구하기
+        Dimension frameSize = getSize();
+        // 화면 중앙에 프레임 위치 계산
+        int x = (screenSize.width - frameSize.width) / 2;
+        int y = (screenSize.height - frameSize.height) / 2;
+        // 프레임 위치 설정
+        setLocation(x, y);
+    }
+
+    // 화면을 어둡게 만들기 위한 GlassPane을 추가한다.
+    @Override
+    public void addGreyOutGlassPane() {
+        setGlassPane(new JComponent() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+
+                // 명도를 조절하여 어둡게 만듭니다.
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                g2d.setColor(Color.BLACK);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+
+                g2d.dispose();
+            }
+        });
+        getGlassPane().setVisible(false);
+    }
+
+    @Override
+    public void darkenBackground(boolean isDarken) {
+        getGlassPane().setVisible(isDarken);
     }
 }

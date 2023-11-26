@@ -26,7 +26,7 @@ public class MainService {
 
         // 동적으로 테마 분류 쿼리에 추가 체크 안되있을시 null
         if(!addThemeFilters(query, filterData, params)){
-            return null;
+                return null;
         }
 
         // 동적으로 실내외 쿼리 추가
