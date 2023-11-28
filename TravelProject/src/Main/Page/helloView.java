@@ -34,8 +34,7 @@ public class helloView extends JFrame implements ViewControl {
     private JLabel searchResultLabel;
     private JTable table;
 
-    private JToolBar toolBar;
-    private JButton button1;
+    private JMenuBar menuBar;
 
     private JPanel filteringPanel;
     private GridBagConstraints gbc;
@@ -63,6 +62,13 @@ public class helloView extends JFrame implements ViewControl {
     private JButton courseAddButton;
     private JButton courseDeleteButton;
 
+    JMenu fileMenu = new JMenu("파일(구현X)");
+    JMenuItem newItem = new JMenuItem("New");
+    JMenuItem openItem = new JMenuItem("Open");
+    JMenu toolMenu = new JMenu("기능");
+    JMenuItem searchSpotItem = new JMenuItem("관광지검색");
+    JMenuItem favoriteCountItem = new JMenuItem("즐겨찾는 관광지 분석");
+
     private final MainService mainService;
 
     public helloView() {
@@ -71,20 +77,29 @@ public class helloView extends JFrame implements ViewControl {
     }
 
     private void initializeUI() {
+
+        // MenuBar 생성
+        menuBar = new JMenuBar();
+
+        fileMenu.add(newItem);
+        fileMenu.add(openItem);
+
+        toolMenu.add(searchSpotItem);
+        toolMenu.add(favoriteCountItem);
+        searchSpotItem.addActionListener(new MenuItemActionListener());
+        favoriteCountItem.addActionListener(new MenuItemActionListener());
+
+        menuBar.add(fileMenu);
+        menuBar.add(toolMenu);
+        setJMenuBar(menuBar);
+
+
         mainPanel = new JPanel(new BorderLayout());
         /**
          * 상단 Panel에 컴포넌트 추가하는 부분
          */
 
-        // 툴바 추가
-        toolBar = new JToolBar();
-        toolBar.setBackground(Color.WHITE);
-
-        button1 = new JButton("Button 1");
-        toolBar.add(button1);
-
         topPanel = new JPanel(new BorderLayout());
-        topPanel.add(toolBar, BorderLayout.NORTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // 필터링 옵션과 검색을 담은 패널 (상단 좌측)
@@ -113,13 +128,13 @@ public class helloView extends JFrame implements ViewControl {
 
         // 하단 체크박스들
         JPanel bottomFilterPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        TH04CheckBox = new JCheckBox("종교/역사/전통");
+        TH04CheckBox = new JCheckBox("캠핑/스포츠");
         TH04CheckBox.setSelected(true);
         bottomFilterPanel1.add(TH04CheckBox);
         TH01CheckBox = new JCheckBox("문화/예술");
         TH01CheckBox.setSelected(true);
         bottomFilterPanel1.add(TH01CheckBox);
-        TH02CheckBox = new JCheckBox("자연/힐링");
+        TH02CheckBox = new JCheckBox("체험/학습/산업");
         TH02CheckBox.setSelected(true);
         bottomFilterPanel1.add(TH02CheckBox);
 
@@ -129,13 +144,13 @@ public class helloView extends JFrame implements ViewControl {
 
         // 하단 체크박스들
         JPanel bottomFilterPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        TH06CheckBox = new JCheckBox("체험/학습/산업");
+        TH06CheckBox = new JCheckBox("쇼핑/놀이　");
         TH06CheckBox.setSelected(true);
         bottomFilterPanel2.add(TH06CheckBox);
-        TH03CheckBox = new JCheckBox("캠핑/스포츠");
+        TH03CheckBox = new JCheckBox("자연/힐링");
         TH03CheckBox.setSelected(true);
         bottomFilterPanel2.add(TH03CheckBox);
-        TH05CheckBox = new JCheckBox("쇼핑/놀이");
+        TH05CheckBox = new JCheckBox("종교/역사/전통");
         TH05CheckBox.setSelected(true);
         bottomFilterPanel2.add(TH05CheckBox);
 
@@ -217,6 +232,7 @@ public class helloView extends JFrame implements ViewControl {
         add(mainPanel);
         pack();
         setFrameLocationToCenter();
+
         setVisible(true);
     }
 
@@ -309,7 +325,7 @@ public class helloView extends JFrame implements ViewControl {
         bottomPanel.removeAll();
 
         // 표 데이터
-        String[] columnNames = {"관광지명", "지역", "실내/외"};
+        String[] columnNames = {"관광지명", "지역", "실내/외","테마"};
 
         Object[][] data;
         if(touristSpotList == null){
@@ -324,8 +340,10 @@ public class helloView extends JFrame implements ViewControl {
                 String parenthesesContent = SpotNameManager.getSpotLocate(touristSpot.get관광지명());
                 // 실내구분
                 String indoorType = touristSpot.get실내구분();
+                // 테마
+                String theme = SpotNameManager.getThemeName(touristSpot.get테마분류());
                 // 데이터 배열에 할당
-                data[i] = new Object[]{cleanName, parenthesesContent, indoorType};
+                data[i] = new Object[]{cleanName, parenthesesContent, indoorType, theme};
             }
         }
         // 표 모델 생성
@@ -370,14 +388,6 @@ public class helloView extends JFrame implements ViewControl {
     }
 
 
-    // 각 탭에 이미지를 표시하는 패널 생성
-    private JPanel createImagePanel(String imageName) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel imageLabel = new JLabel(new ImageIcon(imageName + ".png"));
-        panel.add(imageLabel, BorderLayout.CENTER);
-        return panel;
-    }
-
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
         @Override
@@ -404,8 +414,33 @@ public class helloView extends JFrame implements ViewControl {
         }
     }
 
-    public JPanel getMainPanel() {
-        return mainPanel;
+    // 버튼 액션 리스너
+    private class MenuItemActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem clickedItem = (JMenuItem) e.getSource();
+
+            if (clickedItem == searchSpotItem) {  // "검색"
+                Map<String, Object> filterData = new HashMap<>();
+                filterData.put("favoriteChecked", favoriteCheckBox.isSelected());
+                filterData.put("TH01Checked", TH01CheckBox.isSelected());
+                filterData.put("TH02Checked", TH02CheckBox.isSelected());
+                filterData.put("TH03Checked", TH03CheckBox.isSelected());
+                filterData.put("TH04Checked", TH04CheckBox.isSelected());
+                filterData.put("TH05Checked", TH05CheckBox.isSelected());
+                filterData.put("TH06Checked", TH06CheckBox.isSelected());
+                filterData.put("isIndoorChecked", indoorButton.isSelected());
+                filterData.put("isOutdoorChecked", outdoorButton.isSelected());
+                filterData.put("isIndoorOutdoorChecked", indoorOutdoorButton.isSelected());
+                filterData.put("searchText", searchField.getText());
+
+                ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
+                createSpotTable(touristSpotList);
+            }
+            else if (clickedItem == favoriteCountItem) {
+                new FavoriteBarGraphView(mainService.getFavoriteThemeCounts());
+            }
+        }
     }
 
     // 프레임 정중앙을 화면 정중앙에 위치시킨다.
