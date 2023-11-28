@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 public class SpotNameManager {
 
     public static final String TH01 = "문화/예술";
-    public static final String TH02 = "자연/힐링";
-    public static final String TH03 = "캠핑/스포츠";
-    public static final String TH04 = "종교/역사/전통";
-    public static final String TH05 = "쇼핑/놀이";
-    public static final String TH06 = "체험/학습/산업로";
+    public static final String TH02 = "체험/학습/산업로";
+    public static final String TH03 = "자연/힐링";
+    public static final String TH04 = "캠핑/스포츠";
+    public static final String TH05 = "종교/역사/전통";
+    public static final String TH06 = "쇼핑/놀이";
 
     // 정규 표현식을 사용하여 괄호와 괄호 안의 내용을 제거
     public static String getSpotName(String input) {
