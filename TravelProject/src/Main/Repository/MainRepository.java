@@ -102,6 +102,49 @@ public class MainRepository {
         }
     }
 
+    public Model관광지 get관광지By관광지ID(int _관광지ID) {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return null;
+        }
+
+        String query = "SELECT * FROM 관광지 WHERE 관광지ID = ?";
+
+        // SQL 쿼리 실행
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, _관광지ID);
+            ResultSet resultSet = statement.executeQuery();
+
+            // 결과 출력 및 저장
+            Model관광지 관광지 = null;
+            while (resultSet.next()) {
+                int i = 1;
+                int 관광지ID = resultSet.getInt(i++);
+                String 지역ID = resultSet.getString(i++);
+                String 관광지명 = resultSet.getString(i++);
+                BigDecimal 경도 = resultSet.getBigDecimal(i++);
+                BigDecimal 위도 = resultSet.getBigDecimal(i++);
+                String 실내구분 = resultSet.getString(i++);
+                String 테마분류 = resultSet.getString(i++);
+                관광지 = new Model관광지(관광지ID, 지역ID, 관광지명, 경도, 위도, 실내구분, 테마분류);
+            }
+
+            // 자원 해제
+            resultSet.close();
+            statement.close();
+
+            return 관광지;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
     public ArrayList<Integer> get코스List(boolean isFavorite) {
         Connection conn = pool.getConnection();
         if(conn == null) {
