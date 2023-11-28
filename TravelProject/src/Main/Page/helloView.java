@@ -28,7 +28,6 @@ public class helloView extends JFrame implements ViewControl {
     private JPanel mainPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
-    private static JPanel backgroundGlassPanel;
     private JLabel searchResultLabel;
     private JTable table;
 
@@ -57,9 +56,6 @@ public class helloView extends JFrame implements ViewControl {
 
     private JPanel coursePanel;
     private JTable courseTable;
-    private JPanel courseButtonPanel;
-    private JButton courseAddButton;
-    private JButton courseDeleteButton;
 
     private final MainService mainService;
 
@@ -288,16 +284,6 @@ public class helloView extends JFrame implements ViewControl {
         courseTable.setFillsViewportHeight(true);
         coursePanel = new JPanel(new FlowLayout());
         coursePanel.add(scrollPane);
-
-        //버튼 추가
-        courseButtonPanel = new JPanel(new GridLayout(0, 1));
-
-        courseAddButton = new JButton("코스 추가");
-        courseDeleteButton = new JButton("코스 삭제");
-        courseButtonPanel.add(courseAddButton);
-        courseButtonPanel.add(courseDeleteButton);
-
-        coursePanel.add(courseButtonPanel);
 
         topPanel.add(coursePanel, BorderLayout.CENTER);
     }
