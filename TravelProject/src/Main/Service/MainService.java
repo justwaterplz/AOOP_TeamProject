@@ -124,9 +124,9 @@ public class MainService {
         }
     }
 
-    public ArrayList<Integer> get코스List()
+    public ArrayList<Integer> get코스List(boolean isFavorite)
     {
-        return mainRepository.get코스List(false);
+        return mainRepository.get코스List(isFavorite);
     }
 
     public ArrayList<Model관광지> get관광지ListIn코스(int courseID) {
