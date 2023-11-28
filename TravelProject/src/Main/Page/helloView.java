@@ -23,8 +23,6 @@ import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class helloView extends JFrame implements ViewControl {
     private JPanel mainPanel;
@@ -232,13 +230,13 @@ public class helloView extends JFrame implements ViewControl {
             }
         };
         
-        // 임시 데이터
-        Vector<String> v1 = new Vector<String>();
-        v1.add("내 코스1");
-        model.addRow(v1);
-        Vector<String> v2 = new Vector<String>();
-        v2.add("내 코스2");
-        model.addRow(v2);
+        // 코스 목록 데이터 생성
+        ArrayList<Integer> courseList = mainService.get코스List();
+        for (int i = 0; i < courseList.size(); ++i) {
+            Vector<String> v = new Vector<String>();
+            v.add(" " + courseList.get(i));
+            model.addRow(v);
+        }
 
         courseTable = new JTable(model);
         courseTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -262,8 +260,8 @@ public class helloView extends JFrame implements ViewControl {
             }
         });
 
-        JFrame thisFrame = this;
         // 표에 마우스 리스너 추가
+        JFrame thisFrame = this;
         courseTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -273,9 +271,10 @@ public class helloView extends JFrame implements ViewControl {
                     int row = target.getSelectedRow();
 
                     if (row != -1) {
-                        String courseName = (String) target.getValueAt(row, 0);
+                        String courseName = ((String)target.getValueAt(row, 0)).trim();
+                        int courseID = Integer.parseInt(courseName);
                         darkenBackground(true);
-                        new CourseDetail(courseName, thisFrame);
+                        new CourseDetail(thisFrame, courseName, mainService.get관광지ListIn코스(courseID));
                     }
                 }
             }
