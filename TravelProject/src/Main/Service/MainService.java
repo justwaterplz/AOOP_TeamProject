@@ -1,10 +1,9 @@
 package Main.Service;
 
 import Main.Model.Model관광지;
+import Main.Model.Model코스정보;
 import Main.Repository.MainRepository;
 
-import javax.xml.crypto.Data;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class MainService {
@@ -128,5 +127,18 @@ public class MainService {
     public ArrayList<Integer> get코스List()
     {
         return mainRepository.get코스List(false);
+    }
+
+    public ArrayList<Model관광지> get관광지ListIn코스(int courseID) {
+        Model코스정보 코스정보 = mainRepository.get코스정보(courseID);
+
+        // 코스정보에 등록된 모든 관광지를 Model관광지 객체로 만들어 리스트로 저장
+        ArrayList<Model관광지> 관광지List = new ArrayList<>();
+        for (int i = 0; i < 코스정보.get관광지ID목록().size(); ++i) {
+            int spotID = 코스정보.get관광지ID목록().get(i);
+            관광지List.add(mainRepository.get관광지By관광지ID(spotID));
+        }
+
+        return 관광지List;
     }
 }
