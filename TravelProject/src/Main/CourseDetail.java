@@ -1,10 +1,14 @@
 package Main;
 
+import Main.Model.Model관광지;
+import Main.Module.SpotNameManager;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -19,7 +23,7 @@ public class CourseDetail extends JDialog {
     private JButton downwardButton;
     private JButton saveButton;
 
-    public CourseDetail(String _courseName, JFrame parentFrame) {
+    public CourseDetail(JFrame parentFrame, String _courseName, ArrayList<Model관광지> 관광지List) {
         // 모달 다이얼로그 창 생성
         super(parentFrame, "", true);
 
@@ -62,19 +66,16 @@ public class CourseDetail extends JDialog {
             }
         };
 
-        // 임시 데이터
-        Vector<String> v1 = new Vector<String>();
-        v1.add("내 코스1");
-        v1.add("내 코스1");
-        v1.add("내 코스1");
-        v1.add("내 코스1");
-        model.addRow(v1);
-        Vector<String> v2 = new Vector<String>();
-        v2.add("내 코스2");
-        v2.add("내 코스2");
-        v2.add("내 코스2");
-        v2.add("내 코스2");
-        model.addRow(v2);
+        // 데이터 설정
+        for (int i = 0; i < 관광지List.size(); ++i) {
+            Model관광지 spot = 관광지List.get(i);
+            Vector<String> v = new Vector<>();
+            v.add(SpotNameManager.getSpotName(spot.get관광지명()));
+            v.add(SpotNameManager.getSpotLocate(spot.get관광지명()));
+            v.add(SpotNameManager.getThemeName(spot.get테마분류()));
+            v.add(spot.get실내구분());
+            model.addRow(v);
+        }
 
         listTable = new JTable(model);
         listTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
