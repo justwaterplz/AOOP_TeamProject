@@ -242,27 +242,42 @@ public class helloView extends JFrame implements ViewControl {
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         courseTable.setSelectionModel(selectionModel);
 
-        // 표에 선택 리스너 추가
-        courseTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        // 팝업 메뉴 생성
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem registerMenuItem = new JMenuItem("즐겨찾기 등록");
+
+        registerMenuItem.addActionListener(new ActionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    // 선택된 행의 데이터를 출력 (예시)
-                    int selectedRow = courseTable.getSelectedRow();
-                    if (selectedRow != -1) {
-                        System.out.println(courseTable.getValueAt(selectedRow, 0));
-                    }
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = courseTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Implement your edit logic here
+                    System.out.println("즐겨찾기 등록 : " + courseTable.getValueAt(selectedRow, 0));
+                    // 등록 완료 알림 띄우기
+                    JOptionPane.showMessageDialog(null, "즐겨찾기 등록이 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
+
+        popupMenu.add(registerMenuItem);
 
         // 표에 마우스 리스너 추가
         JFrame thisFrame = this;
         courseTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                // 우클릭 시 즐겨찾기 등록 메뉴 팝업
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int row = courseTable.rowAtPoint(e.getPoint());
+                    int column = courseTable.columnAtPoint(e.getPoint());
+
+                    if (row >= 0 && row < courseTable.getRowCount() && column >= 0 && column < courseTable.getColumnCount()) {
+                        courseTable.setRowSelectionInterval(row, row);
+                        popupMenu.show(courseTable, e.getX(), e.getY());
+                    }
+                }
                 // 더블 클릭하면 코스 창 띄우기
-                if (e.getClickCount() == 2) {
+                else if (e.getClickCount() == 2) {
                     JTable target = (JTable) e.getSource();
                     int row = target.getSelectedRow();
 
