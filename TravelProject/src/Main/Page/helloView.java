@@ -13,11 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import java.util.Vector;
 import java.util.ArrayList;
@@ -93,6 +89,18 @@ public class helloView extends JFrame implements ViewControl {
         topFilterPanel.add(new JPanel());
 
         favoriteCheckBox = new JCheckBox("즐겨찾기");
+        favoriteCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                // ItemEvent에서 체크 상태 확인
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    createCourseTable(true);
+                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    // 체크 해제됐을 때의 작업 수행
+                    createCourseTable(false);
+                }
+            }
+        });
         topFilterPanel.add(favoriteCheckBox);
 
         gbc.gridx = 0;
