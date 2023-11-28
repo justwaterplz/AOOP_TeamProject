@@ -189,7 +189,9 @@ public class helloView extends JFrame implements ViewControl {
         /**
          * 코스 목록
          */
-        createCourseTable();
+        coursePanel = new JPanel(new FlowLayout());
+        topPanel.add(coursePanel, BorderLayout.CENTER);
+        createCourseTable(false);
 
         //  JSeparator(구분선) 추가
         JSeparator separator = new JSeparator();
@@ -224,6 +226,7 @@ public class helloView extends JFrame implements ViewControl {
 
     // 코스 목록 생성
     private void createCourseTable(boolean isFavorite) {
+        coursePanel.removeAll();
 
         Vector<String> courseVector = new Vector<String>();
         courseVector.add("코스 목록");
@@ -322,10 +325,11 @@ public class helloView extends JFrame implements ViewControl {
         scrollPane.setPreferredSize(new Dimension(300, 200));
 
         courseTable.setFillsViewportHeight(true);
-        coursePanel = new JPanel(new FlowLayout());
         coursePanel.add(scrollPane);
 
-        topPanel.add(coursePanel, BorderLayout.CENTER);
+        // 컴포넌트를 다시 그리도록 갱신
+        coursePanel.revalidate();
+        coursePanel.repaint();
     }
 
     // 표 생성
