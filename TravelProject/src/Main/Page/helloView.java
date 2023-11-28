@@ -223,7 +223,8 @@ public class helloView extends JFrame implements ViewControl {
     }
 
     // 코스 목록 생성
-    private void createCourseTable() {
+    private void createCourseTable(boolean isFavorite) {
+
         Vector<String> courseVector = new Vector<String>();
         courseVector.add("코스 목록");
 
@@ -235,7 +236,7 @@ public class helloView extends JFrame implements ViewControl {
         };
         
         // 코스 목록 데이터 생성
-        ArrayList<Integer> courseList = mainService.get코스List();
+        ArrayList<Integer> courseList = mainService.get코스List(isFavorite);
         for (int i = 0; i < courseList.size(); ++i) {
             Vector<String> v = new Vector<String>();
             v.add(" " + courseList.get(i));
@@ -252,17 +253,35 @@ public class helloView extends JFrame implements ViewControl {
 
         // 팝업 메뉴 생성
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem registerMenuItem = new JMenuItem("즐겨찾기 등록");
+        String itemStr = isFavorite ? "즐겨찾기 삭제" : "즐겨찾기 등록";
+        JMenuItem registerMenuItem = new JMenuItem(itemStr);
 
         registerMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = courseTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    // Implement your edit logic here
-                    System.out.println("즐겨찾기 등록 : " + courseTable.getValueAt(selectedRow, 0));
-                    // 등록 완료 알림 띄우기
-                    JOptionPane.showMessageDialog(null, "즐겨찾기 등록이 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                    String courseName = ((String)courseTable.getValueAt(selectedRow, 0)).trim();
+                    int courseID = Integer.parseInt(courseName);
+
+                    if(isFavorite == false){
+                        if (mainService.checkFavoriteCourseExists(courseID))
+                            JOptionPane.showMessageDialog(null, "이미 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        else {
+                            if(mainService.addFavoriteCourse(courseID)){
+                                JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        if(mainService.deleteFavoriteCourse(courseID)){
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                            createCourseTable(true);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 }
             }
         });
@@ -286,11 +305,9 @@ public class helloView extends JFrame implements ViewControl {
                 }
                 // 더블 클릭하면 코스 창 띄우기
                 else if (e.getClickCount() == 2) {
-                    JTable target = (JTable) e.getSource();
-                    int row = target.getSelectedRow();
-
-                    if (row != -1) {
-                        String courseName = ((String)target.getValueAt(row, 0)).trim();
+                    int selectedRow = courseTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        String courseName = ((String)courseTable.getValueAt(selectedRow, 0)).trim();
                         int courseID = Integer.parseInt(courseName);
                         darkenBackground(true);
                         new CourseDetail(thisFrame, courseName, mainService.get관광지ListIn코스(courseID));
