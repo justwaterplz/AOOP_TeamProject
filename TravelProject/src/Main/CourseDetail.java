@@ -17,11 +17,6 @@ public class CourseDetail extends JDialog {
     private JLabel courseLabel;
     private JTable listTable;
     private JPanel buttonPanel;
-    private JButton courseNameChangeButton;
-    private JButton tourSpotDeleteButton;
-    private JButton upwardButton;
-    private JButton downwardButton;
-    private JButton saveButton;
 
     public CourseDetail(JFrame parentFrame, String _courseName, ArrayList<Model관광지> 관광지List) {
         // 모달 다이얼로그 창 생성
@@ -106,23 +101,6 @@ public class CourseDetail extends JDialog {
 
         listTable.setFillsViewportHeight(true);
         add(scrollPane, BorderLayout.CENTER);
-
-        //버튼 추가
-        buttonPanel = new JPanel(new GridLayout(0, 1));
-
-        courseNameChangeButton = new JButton("코스 이름 변경");
-        tourSpotDeleteButton = new JButton("관광지 삭제");
-        upwardButton = new JButton("Up");
-        downwardButton = new JButton("Down");
-        saveButton = new JButton("저장");
-
-        buttonPanel.add(courseNameChangeButton);
-        buttonPanel.add(tourSpotDeleteButton);
-        buttonPanel.add(upwardButton);
-        buttonPanel.add(downwardButton);
-        buttonPanel.add(saveButton);
-
-        add(buttonPanel, BorderLayout.EAST);
 
         // 다이얼로그 기본 설정
         pack();
