@@ -5,6 +5,8 @@ import Main.Module.ConnectionPool;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 public class MainRepository {
@@ -26,6 +28,48 @@ public class MainRepository {
         try {
             statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM 관광지");
+
+            // 결과 출력 및 저장
+            ArrayList<Model관광지> 관광지List = new ArrayList<>();
+            while (resultSet.next()) {
+                // 각 열의 값을 가져오기 (여기서는 예를 들어 1번째와 2번째 열의 값을 가져옵니다)
+                int i = 1;
+                int 관광지ID = resultSet.getInt(i++);
+                String 지역ID = resultSet.getString(i++);
+                String 관광지명 = resultSet.getString(i++);
+                BigDecimal 경도 = resultSet.getBigDecimal(i++);
+                BigDecimal 위도 = resultSet.getBigDecimal(i++);
+                String 실내구분 = resultSet.getString(i++);
+                String 테마분류 = resultSet.getString(i++);
+                Model관광지 관광지 = new Model관광지(관광지ID, 지역ID, 관광지명, 경도, 위도, 실내구분, 테마분류);
+                관광지List.add(관광지);
+            }
+
+            // 자원 해제
+            resultSet.close();
+            statement.close();
+
+            return 관광지List;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public ArrayList<Model관광지> getFavoriteSpotList() {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return null;
+        }
+
+        // SQL 쿼리 실행
+        Statement statement = null;
+        try {
+            statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT 관광지.* FROM 선호관광지 JOIN 관광지 ON 선호관광지.관광지ID = 관광지.관광지ID");
 
             // 결과 출력 및 저장
             ArrayList<Model관광지> 관광지List = new ArrayList<>();
@@ -215,6 +259,95 @@ public class MainRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public boolean getFavoriteStatus(int spotId) {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return false;
+        }
+
+        // SQL 쿼리 실행
+        String query = "SELECT COUNT(*) FROM 선호관광지 WHERE 관광지ID = ?";
+        PreparedStatement statement = null;
+        try {
+                statement = conn.prepareStatement(query);
+                statement.setInt(1, spotId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // 결과 출력 및 저장
+            int count = 0;
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+            // 자원 해제
+            resultSet.close();
+            statement.close();
+
+            return count==0? false : true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public boolean addFavoriteSpot(int spotId) {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return false;
+        }
+
+        // SQL 쿼리 실행
+        String query = "INSERT INTO 선호관광지 (관광지ID) VALUES (?)";
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, spotId);
+
+            statement.executeUpdate();
+
+            // 자원 해제
+            statement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public boolean deleteFavoriteSpot(int spotId) {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return false;
+        }
+
+        // SQL 쿼리 실행
+        String query = "Delete From 선호관광지 WHERE 관광지ID = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, spotId);
+
+            statement.executeUpdate();
+
+            // 자원 해제
+            statement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         } finally {
             pool.releaseConnection(conn);
         }
