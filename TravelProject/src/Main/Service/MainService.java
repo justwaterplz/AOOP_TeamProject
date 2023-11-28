@@ -141,4 +141,13 @@ public class MainService {
 
         return 관광지List;
     }
+
+    public boolean addFavoriteCourse(int courseID) {
+        return mainRepository.add선호코스(courseID);
+    }
+
+    public boolean deleteFavoriteCourse(int courseID) {
+        return mainRepository.delete선호코스(courseID);
+    }
+    public boolean checkFavoriteCourseExists(int courseID) { return mainRepository.check선호코스Exists(courseID); }
 }
