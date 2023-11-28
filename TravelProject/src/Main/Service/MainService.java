@@ -125,4 +125,8 @@ public class MainService {
         }
     }
 
+    public ArrayList<Integer> get코스List()
+    {
+        return mainRepository.get코스List(false);
+    }
 }
