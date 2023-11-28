@@ -158,7 +158,7 @@ public class MainRepository {
         Statement statement = null;
         try {
             statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM 코스");
+            ResultSet resultSet = statement.executeQuery(query);
 
             // 결과 출력 및 저장
             ArrayList<Integer> 코스IDList = new ArrayList<>();
