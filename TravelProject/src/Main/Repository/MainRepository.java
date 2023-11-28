@@ -298,4 +298,32 @@ public class MainRepository {
             pool.releaseConnection(conn);
         }
     }
+
+    public boolean add선호코스(int 코스ID) {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return false;
+        }
+
+        // SQL 쿼리 실행
+        String query = "INSERT INTO 선호코스 (코스ID) VALUES (?)";
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, 코스ID);
+
+            statement.executeUpdate();
+
+            // 자원 해제
+            statement.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
 }
