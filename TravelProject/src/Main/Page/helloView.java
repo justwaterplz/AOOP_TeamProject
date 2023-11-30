@@ -525,11 +525,11 @@ public class helloView extends JFrame implements ViewControl {
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionModel(selectionModel);
 
-        // 표에 선택 리스너 추가
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        // 표에 마우스 리스너 추가
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
                     int selectedRow = table.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
