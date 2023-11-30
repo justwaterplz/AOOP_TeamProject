@@ -19,14 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class helloView extends JFrame implements ViewControl {
+    JTabbedPane tabbedPane;
     private JPanel mainPanel;
+    private JPanel favPanel;
     private JPanel topPanel;
     private JPanel bottomPanel;
     private JLabel searchResultLabel;
     private JTable table;
-
     private JMenuBar menuBar;
-
     private JPanel filteringPanel;
     private GridBagConstraints gbc;
     private JCheckBox favoriteCheckBox;
@@ -36,17 +36,13 @@ public class helloView extends JFrame implements ViewControl {
     private JCheckBox TH04CheckBox;
     private JCheckBox TH05CheckBox;
     private JCheckBox TH06CheckBox;
-
     private ButtonGroup indoorOutdoorButtonGroup;
     private JRadioButton indoorButton;
     private JRadioButton outdoorButton;
     private JRadioButton indoorOutdoorButton;
-
-
     private JPanel searchPanel;
     private JTextField searchField;
     private JButton searchButton;
-
     private JPanel coursePanel;
     private JTable courseTable;
 
@@ -468,6 +464,11 @@ public class helloView extends JFrame implements ViewControl {
                 new FavoriteBarGraphView(mainService.getFavoriteThemeCounts());
             }
         }
+    }
+
+    // 현재 즐겨찾기 탭이 선택됐는지 여부를 반환한다.
+    private boolean isFavTab() {
+        return tabbedPane.getSelectedIndex() == 1;
     }
 
     // 프레임 정중앙을 화면 정중앙에 위치시킨다.
