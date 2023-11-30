@@ -2,7 +2,10 @@ package Main.Repository;
 import Main.Model.*;
 import Main.Module.ConnectionPool;
 
+import javax.swing.*;
+import java.io.*;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -392,6 +395,188 @@ public class MainRepository {
             e.printStackTrace();
             return false;
         } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public void makeDbtoCsvSpot() {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+        }
+
+        // SQL 쿼리 실행
+        String desktopPath = System.getProperty("user.home") + "\\Desktop\\Spotoutput.csv";
+
+        String query = "SELECT * FROM 관광지";
+        Statement statement = null;
+        try {
+            statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            // CSV 파일 생성
+            try (FileWriter csvWriter = new FileWriter(desktopPath)) {
+                // CSV 파일 헤더 작성
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    csvWriter.append(metaData.getColumnName(i));
+                    if (i < columnCount) {
+                        csvWriter.append(",");
+                    }
+                }
+                csvWriter.append("\n");
+
+                // 결과 집합을 CSV 파일에 쓰기
+                while (resultSet.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        csvWriter.append(resultSet.getString(i));
+                        if (i < columnCount) {
+                            csvWriter.append(",");
+                        }
+                    }
+                    csvWriter.append("\n");
+                }
+            }
+            statement.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public void makeDbtoCsvFavoriteSpot() {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+        }
+
+        // SQL 쿼리 실행
+        String desktopPath = System.getProperty("user.home") + "\\Desktop\\FavoriteSpotoutput.csv";
+
+        String query = "SELECT * FROM 관광지";
+        Statement statement = null;
+        try {
+            statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            // CSV 파일 생성
+            try (FileWriter csvWriter = new FileWriter(desktopPath)) {
+                // CSV 파일 헤더 작성
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    csvWriter.append(metaData.getColumnName(i));
+                    if (i < columnCount) {
+                        csvWriter.append(",");
+                    }
+                }
+                csvWriter.append("\n");
+
+                // 결과 집합을 CSV 파일에 쓰기
+                while (resultSet.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        csvWriter.append(resultSet.getString(i));
+                        if (i < columnCount) {
+                            csvWriter.append(",");
+                        }
+                    }
+                    csvWriter.append("\n");
+                }
+            }
+            statement.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public void makeDbtoCsvCourse() {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+        }
+
+        // SQL 쿼리 실행
+        String desktopPath = System.getProperty("user.home") + "\\Desktop\\Courseoutput.csv";
+
+        String query = "SELECT * FROM 코스정보";
+        Statement statement = null;
+        try {
+            statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            // CSV 파일 생성
+            try (FileWriter csvWriter = new FileWriter(desktopPath)) {
+                // CSV 파일 헤더 작성
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    csvWriter.append(metaData.getColumnName(i));
+                    if (i < columnCount) {
+                        csvWriter.append(",");
+                    }
+                }
+                csvWriter.append("\n");
+
+                // 결과 집합을 CSV 파일에 쓰기
+                while (resultSet.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        csvWriter.append(resultSet.getString(i));
+                        if (i < columnCount) {
+                            csvWriter.append(",");
+                        }
+                    }
+                    csvWriter.append("\n");
+                }
+            }
+            statement.close();
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
+    public int importCsvtoDbCourse (String csvFilePath) throws IOException {
+        Connection conn = pool.getConnection();
+        if(conn == null) {
+            System.out.println("Failed Get Connection");
+            return -1;
+        }
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(csvFilePath), Charset.forName("UTF-8")));
+
+            // 첫번째 행은 무시
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                // CSV에서 데이터 추출
+                String[] data = line.split(",");
+
+                // 데이터베이스에 데이터 삽입
+                String sql = "INSERT INTO 관광지 (관광지ID, 지역ID, 관광지명, 경도, 위도, 실내구분, 테마분류) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+                    for (int i = 0; i < data.length; i++) {
+                        if (i == 0) {
+                            preparedStatement.setInt(i + 1, Integer.parseInt(data[i]));
+                        } else if (i == 1 || i == 2 || i == 5 || i == 6) {
+                            preparedStatement.setString(i + 1, data[i]);
+                        } else if (i == 3 || i == 4) {
+                            preparedStatement.setDouble(i + 1, Double.parseDouble(data[i]));
+                        }
+                    }
+                    preparedStatement.executeUpdate();
+                }
+            }
+            return 1;
+        } catch (IOException | SQLException ex ){
+            System.out.println("ex = " + ex);
+            JOptionPane.showMessageDialog(null, ex, "알림", JOptionPane.INFORMATION_MESSAGE);
+            return -1;
+        } finally {
+            br.close();
             pool.releaseConnection(conn);
         }
     }

@@ -4,9 +4,14 @@ import Main.Model.Model관광지;
 import Main.Model.Model코스정보;
 import Main.Repository.MainRepository;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
-public class MainService {
+public class MainService extends Component {
     private final MainRepository mainRepository;
 
     public MainService() {
@@ -69,6 +74,29 @@ public class MainService {
         return countMap;
     }
 
+    public void makeDbtoCsvSpot(){mainRepository.makeDbtoCsvSpot();}
+
+    public void makeDbtoCsvFavoriteSpot(){mainRepository.makeDbtoCsvFavoriteSpot();}
+
+    public void makeDbtoCsvCourse(){mainRepository.makeDbtoCsvCourse();}
+
+    public int importCsvtoDbCourse() throws IOException {
+        String csvFilePath = "null";
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select CSV File");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+            return mainRepository.importCsvtoDbCourse(csvFilePath);
+        } else if (result == JFileChooser.CANCEL_OPTION){
+            return 0;
+        } else {
+            return -1;
+        }
+
+
+    }
 
 
 
