@@ -574,22 +574,38 @@ public class helloView extends JFrame implements ViewControl {
         public void actionPerformed(ActionEvent e) {
             JButton clickedButton = (JButton) e.getSource();
 
-            if (clickedButton == searchButton) {  // "검색"
+            if (clickedButton == searchButton || clickedButton == favSearchButton) {  // "검색"
                 Map<String, Object> filterData = new HashMap<>();
-                filterData.put("favoriteChecked", favoriteCheckBox.isSelected());
-                filterData.put("TH01Checked", TH01CheckBox.isSelected());
-                filterData.put("TH02Checked", TH02CheckBox.isSelected());
-                filterData.put("TH03Checked", TH03CheckBox.isSelected());
-                filterData.put("TH04Checked", TH04CheckBox.isSelected());
-                filterData.put("TH05Checked", TH05CheckBox.isSelected());
-                filterData.put("TH06Checked", TH06CheckBox.isSelected());
-                filterData.put("isIndoorChecked", indoorButton.isSelected());
-                filterData.put("isOutdoorChecked", outdoorButton.isSelected());
-                filterData.put("isIndoorOutdoorChecked", indoorOutdoorButton.isSelected());
-                filterData.put("searchText", searchField.getText());
+                filterData.put("favoriteChecked", isFavTab());
+                // 일반 검색
+                if (isFavTab() == false) {
+                    filterData.put("TH01Checked", TH01CheckBox.isSelected());
+                    filterData.put("TH02Checked", TH02CheckBox.isSelected());
+                    filterData.put("TH03Checked", TH03CheckBox.isSelected());
+                    filterData.put("TH04Checked", TH04CheckBox.isSelected());
+                    filterData.put("TH05Checked", TH05CheckBox.isSelected());
+                    filterData.put("TH06Checked", TH06CheckBox.isSelected());
+                    filterData.put("isIndoorChecked", indoorButton.isSelected());
+                    filterData.put("isOutdoorChecked", outdoorButton.isSelected());
+                    filterData.put("isIndoorOutdoorChecked", indoorOutdoorButton.isSelected());
+                    filterData.put("searchText", searchField.getText());
+                }
+                // 즐겨찾기 검색
+                else  {
+                    filterData.put("TH01Checked", favTH01CheckBox.isSelected());
+                    filterData.put("TH02Checked", favTH02CheckBox.isSelected());
+                    filterData.put("TH03Checked", favTH03CheckBox.isSelected());
+                    filterData.put("TH04Checked", favTH04CheckBox.isSelected());
+                    filterData.put("TH05Checked", favTH05CheckBox.isSelected());
+                    filterData.put("TH06Checked", favTH06CheckBox.isSelected());
+                    filterData.put("isIndoorChecked", favIndoorButton.isSelected());
+                    filterData.put("isOutdoorChecked", favOutdoorButton.isSelected());
+                    filterData.put("isIndoorOutdoorChecked", favIndoorOutdoorButton.isSelected());
+                    filterData.put("searchText", favSearchField.getText());
+                }
 
                 ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
-                createSpotTable(touristSpotList);
+                createSpotTable(isFavTab(), touristSpotList);
             }
         }
     }
@@ -602,20 +618,35 @@ public class helloView extends JFrame implements ViewControl {
 
             if (clickedItem == searchSpotItem) {  // "검색"
                 Map<String, Object> filterData = new HashMap<>();
-                filterData.put("favoriteChecked", favoriteCheckBox.isSelected());
-                filterData.put("TH01Checked", TH01CheckBox.isSelected());
-                filterData.put("TH02Checked", TH02CheckBox.isSelected());
-                filterData.put("TH03Checked", TH03CheckBox.isSelected());
-                filterData.put("TH04Checked", TH04CheckBox.isSelected());
-                filterData.put("TH05Checked", TH05CheckBox.isSelected());
-                filterData.put("TH06Checked", TH06CheckBox.isSelected());
-                filterData.put("isIndoorChecked", indoorButton.isSelected());
-                filterData.put("isOutdoorChecked", outdoorButton.isSelected());
-                filterData.put("isIndoorOutdoorChecked", indoorOutdoorButton.isSelected());
-                filterData.put("searchText", searchField.getText());
+                filterData.put("favoriteChecked", isFavTab());
+                // 일반 검색
+                if (isFavTab() == false) {
+                    filterData.put("TH01Checked", TH01CheckBox.isSelected());
+                    filterData.put("TH02Checked", TH02CheckBox.isSelected());
+                    filterData.put("TH03Checked", TH03CheckBox.isSelected());
+                    filterData.put("TH04Checked", TH04CheckBox.isSelected());
+                    filterData.put("TH05Checked", TH05CheckBox.isSelected());
+                    filterData.put("TH06Checked", TH06CheckBox.isSelected());
+                    filterData.put("isIndoorChecked", indoorButton.isSelected());
+                    filterData.put("isOutdoorChecked", outdoorButton.isSelected());
+                    filterData.put("searchText", searchField.getText());
+                }
+                // 즐겨찾기 검색
+                else {
+                    filterData.put("TH01Checked", favTH01CheckBox.isSelected());
+                    filterData.put("TH02Checked", favTH02CheckBox.isSelected());
+                    filterData.put("TH03Checked", favTH03CheckBox.isSelected());
+                    filterData.put("TH04Checked", favTH04CheckBox.isSelected());
+                    filterData.put("TH05Checked", favTH05CheckBox.isSelected());
+                    filterData.put("TH06Checked", favTH06CheckBox.isSelected());
+                    filterData.put("isIndoorChecked", favIndoorButton.isSelected());
+                    filterData.put("isOutdoorChecked", favOutdoorButton.isSelected());
+                    filterData.put("isIndoorOutdoorChecked", favIndoorOutdoorButton.isSelected());
+                    filterData.put("searchText", favSearchField.getText());
+                }
 
                 ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
-                createSpotTable(touristSpotList);
+                createSpotTable(isFavTab(), touristSpotList);
             }
             else if (clickedItem == favoriteCountItem) {
                 new FavoriteBarGraphView(mainService.getFavoriteThemeCounts());
