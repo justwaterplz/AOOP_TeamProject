@@ -32,20 +32,20 @@ public class SpotDetailView extends JFrame {
     private JButton favoriteButton;
     private JButton closeButton;
 
+    private final MainService mainService;
     private final NaverApiService naverApiService;
     private double longitude;
     private double latitude;
+    private Model관광지 spot;
+    private boolean isFavorited;
 
     public SpotDetailView(Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         this.naverApiService = new NaverApiService();
-
-        // 프레임 설정
-        setTitle("여행지 상세 정보");
-        setSize(800, 800);
-        setLocationRelativeTo(null);
-        setResizable(false);
+        this.mainService = new MainService();
+        this.spot = spot;
 
         initializeUI(spot);
+        checkFavoritedStatus();
 
         // 프레임 표시
         setVisible(true);
@@ -61,13 +61,14 @@ public class SpotDetailView extends JFrame {
 
         // 탭 패널 생성 및 추가
         tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("관광지 사진", createGoogleImagePanel(spot));
+        //tabbedPane.addTab("관광지 사진", createGoogleImagePanel(spot)); // 병대 돈을 위해 잠시 주석
         tabbedPane.addTab("네이버 지도", createNaverImagePanel(spot));
         //tabbedPane.addTab("그래프", createImagePanel("Image 3"));
 
 
         // 즐겨찾기 버튼
-        favoriteButton = new JButton("즐겨찾기 등록");
+        favoriteButton = new JButton("");
+        favoriteButton.addActionListener(new SpotDetailView.ButtonActionListener());
 
         // 닫기 버튼
         closeButton = new JButton("닫기");
@@ -101,6 +102,12 @@ public class SpotDetailView extends JFrame {
         add(tabbedPane, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
+
+        // 프레임 설정
+        setTitle("여행지 상세 정보");
+        setSize(800, 800);
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
     private JPanel createGoogleImagePanel(Model관광지 spot) throws IOException, ParserConfigurationException, SAXException {
@@ -137,6 +144,10 @@ public class SpotDetailView extends JFrame {
         return panel;
     }
 
+    public void checkFavoritedStatus() {
+         isFavorited = mainService.checkFavoritedStatus(spot.get관광지ID());
+         favoriteButton.setText(isFavorited==true ?"즐겨찾기 삭제" : "즐겨찾기 등록");
+    }
 
     // 버튼 액션 리스너
     private class ButtonActionListener implements ActionListener {
@@ -144,9 +155,24 @@ public class SpotDetailView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             JButton clickedButton = (JButton) e.getSource();
 
-            if (clickedButton == closeButton) {  // "검색"
-                System.out.println("clickedButton");
+            if (clickedButton == closeButton) {  // "닫기"
                 dispose();
+            }
+            else if (clickedButton == favoriteButton) {  // "검색"
+                if(isFavorited==false){
+                    if(mainService.addFavoriteSpot(spot.get관광지ID())){
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    if(mainService.deleteFavoriteSpot(spot.get관광지ID())){
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                checkFavoritedStatus();
             }
         }
     }
