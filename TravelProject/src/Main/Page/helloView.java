@@ -1,11 +1,9 @@
 package Main.Page;
 
-import Main.CourseDetail;
 import Main.Model.Model관광지;
 import Main.Module.NonEditableTableModel;
 import Main.Module.SpotNameManager;
 import Main.Service.MainService;
-import Main.ViewControl;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;

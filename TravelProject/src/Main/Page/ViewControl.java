@@ -1,4 +1,4 @@
-package Main;
+package Main.Page;
 
 public interface ViewControl {
 

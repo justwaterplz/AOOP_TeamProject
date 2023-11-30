@@ -1,4 +1,4 @@
-package Main;
+package Main.Page;
 
 import Main.Model.Model관광지;
 import Main.Module.SpotNameManager;
