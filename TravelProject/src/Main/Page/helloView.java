@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import java.io.IOException;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,12 +63,13 @@ public class helloView extends JFrame implements ViewControl {
     private JButton courseAddButton;
     private JButton courseDeleteButton;
 
-    JMenu fileMenu = new JMenu("파일(구현X)");
-    JMenuItem newItem = new JMenuItem("New");
-    JMenuItem openItem = new JMenuItem("Open");
+    JMenu fileMenu = new JMenu("파일");
+    JMenuItem spotCsvItem = new JMenuItem("관광지csv추출");
+    JMenuItem favoriteSpotCsvItem = new JMenuItem("선호관광지csv추출");
+    JMenuItem courseCsvItem = new JMenuItem("코스csv추출");
+    JMenuItem spotCsvAddItem = new JMenuItem("코스csvDB에삽입");
     JMenu toolMenu = new JMenu("기능");
     JMenuItem searchSpotItem = new JMenuItem("관광지검색");
-    JMenuItem favoriteCountItem = new JMenuItem("즐겨찾는 관광지 분석");
 
     private final MainService mainService;
 
@@ -81,13 +83,17 @@ public class helloView extends JFrame implements ViewControl {
         // MenuBar 생성
         menuBar = new JMenuBar();
 
-        fileMenu.add(newItem);
-        fileMenu.add(openItem);
+        fileMenu.add(spotCsvItem);
+        fileMenu.add(favoriteSpotCsvItem);
+        fileMenu.add(courseCsvItem);
+        fileMenu.add(spotCsvAddItem);
+        spotCsvItem.addActionListener(new MenuItemActionListener());
+        favoriteSpotCsvItem.addActionListener(new MenuItemActionListener());
+        courseCsvItem.addActionListener(new MenuItemActionListener());
+        spotCsvAddItem.addActionListener(new MenuItemActionListener());
 
         toolMenu.add(searchSpotItem);
-        toolMenu.add(favoriteCountItem);
         searchSpotItem.addActionListener(new MenuItemActionListener());
-        favoriteCountItem.addActionListener(new MenuItemActionListener());
 
         menuBar.add(fileMenu);
         menuBar.add(toolMenu);
@@ -437,8 +443,31 @@ public class helloView extends JFrame implements ViewControl {
                 ArrayList<Model관광지> touristSpotList = mainService.getTouristSpotListByFilters(filterData);
                 createSpotTable(touristSpotList);
             }
-            else if (clickedItem == favoriteCountItem) {
-                new FavoriteBarGraphView(mainService.getFavoriteThemeCounts());
+            else if (clickedItem == spotCsvItem) {
+                mainService.makeDbtoCsvSpot();
+                JOptionPane.showMessageDialog(null, "바탕화면에 관광지 csv 추출되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if (clickedItem == favoriteSpotCsvItem) {
+                mainService.makeDbtoCsvFavoriteSpot();
+                JOptionPane.showMessageDialog(null, "바탕화면에 즐겨찾는 관광지 csv 추출되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if (clickedItem == courseCsvItem) {
+                mainService.makeDbtoCsvCourse();
+                JOptionPane.showMessageDialog(null, "바탕화면에 코스 csv 추출되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if (clickedItem == spotCsvAddItem) {
+
+                JOptionPane.showMessageDialog(null, "올바른 관광지 테이블 형태의 csv파일을 지정해주세요.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                int result = 0;
+
+                try {
+                    result = mainService.importCsvtoDbCourse();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                if (result == 1){JOptionPane.showMessageDialog(null, "DB에 삽입 완료되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);}
+                else if (result == -1){JOptionPane.showMessageDialog(null, "삽입 오류.", "알림", JOptionPane.INFORMATION_MESSAGE);}
             }
         }
     }
