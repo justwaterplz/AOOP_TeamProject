@@ -5,6 +5,8 @@ import Main.Module.NonEditableTableModel;
 import Main.Module.SpotNameManager;
 import Main.Service.MainService;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -23,28 +25,48 @@ public class helloView extends JFrame implements ViewControl {
     private JPanel mainPanel;
     private JPanel favPanel;
     private JPanel topPanel;
+    private JPanel favTopPanel;
     private JPanel bottomPanel;
+    private JPanel favBottomPanel;
     private JLabel searchResultLabel;
+    private JLabel favSearchResultLabel;
     private JTable table;
+    private JTable favTable;
     private JMenuBar menuBar;
     private JPanel filteringPanel;
+    private JPanel favFilteringPanel;
     private GridBagConstraints gbc;
-    private JCheckBox favoriteCheckBox;
+    private GridBagConstraints favGbc;
     private JCheckBox TH01CheckBox;
+    private JCheckBox favTH01CheckBox;
     private JCheckBox TH02CheckBox;
+    private JCheckBox favTH02CheckBox;
     private JCheckBox TH03CheckBox;
+    private JCheckBox favTH03CheckBox;
     private JCheckBox TH04CheckBox;
+    private JCheckBox favTH04CheckBox;
     private JCheckBox TH05CheckBox;
+    private JCheckBox favTH05CheckBox;
     private JCheckBox TH06CheckBox;
+    private JCheckBox favTH06CheckBox;
     private ButtonGroup indoorOutdoorButtonGroup;
+    private ButtonGroup favIndoorOutdoorButtonGroup;
     private JRadioButton indoorButton;
+    private JRadioButton favIndoorButton;
     private JRadioButton outdoorButton;
+    private JRadioButton favOutdoorButton;
     private JRadioButton indoorOutdoorButton;
+    private JRadioButton favIndoorOutdoorButton;
     private JPanel searchPanel;
+    private JPanel favSearchPanel;
     private JTextField searchField;
+    private JTextField favSearchField;
     private JButton searchButton;
+    private JButton favSearchButton;
     private JPanel coursePanel;
+    private JPanel favCoursePanel;
     private JTable courseTable;
+    private JTable favCourseTable;
 
     JMenu fileMenu = new JMenu("파일(구현X)");
     JMenuItem newItem = new JMenuItem("New");
@@ -71,7 +93,7 @@ public class helloView extends JFrame implements ViewControl {
         // 프레임 기본 설정
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("검색", mainPanel);
-        tabbedPane.addTab("즐겨찾기", new JPanel());
+        tabbedPane.addTab("즐겨찾기", favPanel);
         add(tabbedPane);
 
         setTitle("여행의 민족");
@@ -111,30 +133,6 @@ public class helloView extends JFrame implements ViewControl {
         filteringPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
-
-        // 상단 레이블 및 체크박스
-        JPanel topFilterPanel = new JPanel(new GridLayout(1, 3));
-        topFilterPanel.add(new JLabel("검색 필터링"));
-        topFilterPanel.add(new JPanel());
-
-        favoriteCheckBox = new JCheckBox("즐겨찾기");
-        favoriteCheckBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                // ItemEvent에서 체크 상태 확인
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    createCourseTable(true);
-                } else if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    // 체크 해제됐을 때의 작업 수행
-                    createCourseTable(false);
-                }
-            }
-        });
-        topFilterPanel.add(favoriteCheckBox);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        filteringPanel.add(topFilterPanel, gbc);
 
         // 빈 패널 추가 (공간을 만들기 위함)
         JPanel emptyPanel = new JPanel();
@@ -242,17 +240,141 @@ public class helloView extends JFrame implements ViewControl {
     }
 
     private void initializeFavPanel() {
+        favPanel = new JPanel(new BorderLayout());
 
+        /**
+         * 상단 Panel에 컴포넌트 추가하는 부분
+         */
+        favTopPanel = new JPanel(new BorderLayout());
+        favPanel.add(favTopPanel, BorderLayout.NORTH);
+
+        // 필터링 옵션과 검색을 담은 패널 (상단 좌측)
+        favFilteringPanel = new JPanel(new GridBagLayout());
+        favFilteringPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        favGbc = new GridBagConstraints();
+        favGbc.anchor = GridBagConstraints.WEST;
+
+        // 빈 패널 추가 (공간을 만들기 위함)
+        JPanel emptyPanel = new JPanel();
+        favGbc.gridy = 1;
+        favGbc.insets = new Insets(0, 0, 0, 0); // 상단 여백 추가
+        favFilteringPanel.add(emptyPanel, favGbc);
+
+        // 하단 체크박스들
+        JPanel bottomFilterPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        favTH04CheckBox = new JCheckBox("캠핑/스포츠");
+        favTH04CheckBox.setSelected(true);
+        bottomFilterPanel1.add(favTH04CheckBox);
+        favTH01CheckBox = new JCheckBox("문화/예술");
+        favTH01CheckBox.setSelected(true);
+        bottomFilterPanel1.add(favTH01CheckBox);
+        favTH02CheckBox = new JCheckBox("체험/학습/산업");
+        favTH02CheckBox.setSelected(true);
+        bottomFilterPanel1.add(favTH02CheckBox);
+
+        favGbc.gridx = 0;
+        favGbc.gridy = 2;
+        favFilteringPanel.add(bottomFilterPanel1, favGbc);
+
+        // 하단 체크박스들
+        JPanel bottomFilterPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        favTH06CheckBox = new JCheckBox("쇼핑/놀이　");
+        favTH06CheckBox.setSelected(true);
+        bottomFilterPanel2.add(favTH06CheckBox);
+        favTH03CheckBox = new JCheckBox("자연/힐링");
+        favTH03CheckBox.setSelected(true);
+        bottomFilterPanel2.add(favTH03CheckBox);
+        favTH05CheckBox = new JCheckBox("종교/역사/전통");
+        favTH05CheckBox.setSelected(true);
+        bottomFilterPanel2.add(favTH05CheckBox);
+
+        favGbc.gridx = 0;
+        favGbc.gridy = 3;
+        favFilteringPanel.add(bottomFilterPanel2, favGbc);
+
+        // 하단 체크박스들
+        JPanel bottomFilterPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        favIndoorButton = new JRadioButton("실내");
+        favOutdoorButton = new JRadioButton("실외");
+        favIndoorOutdoorButton = new JRadioButton("모두");
+
+        favIndoorOutdoorButtonGroup = new ButtonGroup();
+        favIndoorOutdoorButtonGroup.add(favIndoorButton);
+        favIndoorOutdoorButtonGroup.add(favOutdoorButton);
+        favIndoorOutdoorButtonGroup.add(favIndoorOutdoorButton);
+
+        favIndoorButton.setSelected(true);
+        bottomFilterPanel3.add(favIndoorButton);
+        bottomFilterPanel3.add(favOutdoorButton);
+        bottomFilterPanel3.add(favIndoorOutdoorButton);
+
+        favGbc.gridx = 0;
+        favGbc.gridy = 4;
+        favFilteringPanel.add(bottomFilterPanel3, favGbc);
+
+        // 검색창 및 검색 버튼을 담은 패널
+        favSearchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        favSearchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        favSearchField = new JTextField(20);
+        favSearchField.setFont(new Font("NanumGothic", Font.PLAIN, 14));
+        favSearchField.setBackground(new Color(255, 255, 255));  // 배경색 설정
+        favSearchField.setBorder(BorderFactory.createLineBorder(Color.BLACK));  // 테두리 설정
+
+        favSearchButton = new JButton("검색");
+        favSearchButton.addActionListener(new ButtonActionListener());
+        favSearchPanel.add(favSearchField);
+        favSearchPanel.add(favSearchButton);
+
+        favGbc.gridx = 0;
+        favGbc.gridy = 10;
+        favGbc.insets = new Insets(0, 0, 0, 0); // 상단 여백 추가
+        favFilteringPanel.add(favSearchPanel, favGbc);
+
+        favTopPanel.add(favFilteringPanel, BorderLayout.WEST);
+
+        /**
+         * 코스 목록
+         */
+        favCoursePanel = new JPanel(new FlowLayout());
+        favTopPanel.add(favCoursePanel, BorderLayout.CENTER);
+        createCourseTable(true);
+
+        //  JSeparator(구분선) 추가
+        JSeparator separator = new JSeparator();
+        favTopPanel.add(separator, BorderLayout.SOUTH);
+
+        /**
+         * 하단 Panel
+         */
+        favBottomPanel = new JPanel(new BorderLayout());
+        favPanel.add(favBottomPanel, BorderLayout.CENTER);
+
+        // 상단 레이블
+        favSearchResultLabel = new JLabel("검색 결과");
+        favSearchResultLabel.setHorizontalAlignment(JLabel.CENTER);
+        favBottomPanel.add(favSearchResultLabel, BorderLayout.NORTH);
+
+        // 검색 버튼 누르면 실행되야하는 표 임시 생성
+        createSpotTable(null);
     }
 
     // 코스 목록 생성
     private void createCourseTable(boolean isFavorite) {
-        coursePanel.removeAll();
+        JPanel refPanel;
+        if (isFavorite) {
+            refPanel = favCoursePanel;
+        } else {
+            refPanel = coursePanel;
+        }
 
+        // 지우고 다시 그림
+        refPanel.removeAll();
+
+        // defaultTableModel 생성
         Vector<String> courseVector = new Vector<String>();
-        courseVector.add("코스 목록");
-
-        //defaultTableModel 생성
+        String s = (isFavorite ? "선호코스 목록" : "코스 목록");
+        courseVector.add(s);
         DefaultTableModel model = new DefaultTableModel(courseVector, 0){
             public boolean isCellEditable(int r, int c){
                 return false;
