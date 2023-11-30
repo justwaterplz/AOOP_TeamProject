@@ -57,12 +57,31 @@ public class helloView extends JFrame implements ViewControl {
 
     public helloView() {
         this.mainService = new MainService();
-        initializeUI();
+
+        initializeMenuBar();
+        initializeMainPanel();
+        initializeFavPanel();
+        addGreyOutGlassPane();
+        initializeFrame();
+
+        System.out.println(isFavTab());
     }
 
-    private void initializeUI() {
+    private void initializeFrame() {
+        // 프레임 기본 설정
+        tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("검색", mainPanel);
+        tabbedPane.addTab("즐겨찾기", new JPanel());
+        add(tabbedPane);
 
-        // MenuBar 생성
+        setTitle("여행의 민족");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setFrameLocationToCenter();
+        setVisible(true);
+    }
+
+    private void initializeMenuBar() {
         menuBar = new JMenuBar();
 
         fileMenu.add(newItem);
@@ -76,13 +95,14 @@ public class helloView extends JFrame implements ViewControl {
         menuBar.add(fileMenu);
         menuBar.add(toolMenu);
         setJMenuBar(menuBar);
+    }
 
-
+    private void initializeMainPanel() {
         mainPanel = new JPanel(new BorderLayout());
+
         /**
          * 상단 Panel에 컴포넌트 추가하는 부분
          */
-
         topPanel = new JPanel(new BorderLayout());
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
@@ -209,7 +229,6 @@ public class helloView extends JFrame implements ViewControl {
         /**
          * 하단 Panel
          */
-
         bottomPanel = new JPanel(new BorderLayout());
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
 
@@ -220,18 +239,10 @@ public class helloView extends JFrame implements ViewControl {
 
         // 검색 버튼 누르면 실행되야하는 표 임시 생성
         createSpotTable(null);
+    }
 
-        // 화면을 어둡게 만들기 위한 GlassPane 추가
-        addGreyOutGlassPane();
+    private void initializeFavPanel() {
 
-        // 프레임 기본 설정
-        setTitle("여행의 민족");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(mainPanel);
-        pack();
-        setFrameLocationToCenter();
-
-        setVisible(true);
     }
 
     // 코스 목록 생성
