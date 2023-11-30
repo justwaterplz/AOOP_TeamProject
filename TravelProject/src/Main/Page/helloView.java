@@ -85,8 +85,6 @@ public class helloView extends JFrame implements ViewControl {
         initializeFavPanel();
         addGreyOutGlassPane();
         initializeFrame();
-
-        System.out.println(isFavTab());
     }
 
     private void initializeFrame() {
@@ -94,6 +92,14 @@ public class helloView extends JFrame implements ViewControl {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("검색", mainPanel);
         tabbedPane.addTab("즐겨찾기", favPanel);
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (isFavTab()) {
+                    createCourseTable(true);
+                }
+            }
+        });
         add(tabbedPane);
 
         setTitle("여행의 민족");
@@ -389,25 +395,33 @@ public class helloView extends JFrame implements ViewControl {
             model.addRow(v);
         }
 
-        courseTable = new JTable(model);
-        courseTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        // 테이블 생성
+        JTable refTable;
+        if (isFavorite) {
+            favCourseTable = new JTable(model);
+            refTable = favCourseTable;
+        } else {
+            courseTable = new JTable(model);
+            refTable = courseTable;
+        }
+        refTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        refTable.setFillsViewportHeight(true);
 
         // 단일 선택 모델로 변경
         ListSelectionModel selectionModel = new DefaultListSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        courseTable.setSelectionModel(selectionModel);
+        refTable.setSelectionModel(selectionModel);
 
         // 팝업 메뉴 생성
         JPopupMenu popupMenu = new JPopupMenu();
         String itemStr = isFavorite ? "즐겨찾기 삭제" : "즐겨찾기 등록";
         JMenuItem registerMenuItem = new JMenuItem(itemStr);
-
         registerMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = courseTable.getSelectedRow();
+                int selectedRow = refTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    String courseName = ((String)courseTable.getValueAt(selectedRow, 0)).trim();
+                    String courseName = ((String)refTable.getValueAt(selectedRow, 0)).trim();
                     int courseID = Integer.parseInt(courseName);
 
                     if(isFavorite == false){
@@ -431,29 +445,28 @@ public class helloView extends JFrame implements ViewControl {
                 }
             }
         });
-
         popupMenu.add(registerMenuItem);
 
         // 표에 마우스 리스너 추가
         JFrame thisFrame = this;
-        courseTable.addMouseListener(new MouseAdapter() {
+        refTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // 우클릭 시 즐겨찾기 등록 메뉴 팝업
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    int row = courseTable.rowAtPoint(e.getPoint());
-                    int column = courseTable.columnAtPoint(e.getPoint());
+                    int row = refTable.rowAtPoint(e.getPoint());
+                    int column = refTable.columnAtPoint(e.getPoint());
 
-                    if (row >= 0 && row < courseTable.getRowCount() && column >= 0 && column < courseTable.getColumnCount()) {
-                        courseTable.setRowSelectionInterval(row, row);
-                        popupMenu.show(courseTable, e.getX(), e.getY());
+                    if (row >= 0 && row < refTable.getRowCount() && column >= 0 && column < refTable.getColumnCount()) {
+                        refTable.setRowSelectionInterval(row, row);
+                        popupMenu.show(refTable, e.getX(), e.getY());
                     }
                 }
                 // 더블 클릭하면 코스 창 띄우기
                 else if (e.getClickCount() == 2) {
-                    int selectedRow = courseTable.getSelectedRow();
+                    int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
-                        String courseName = ((String)courseTable.getValueAt(selectedRow, 0)).trim();
+                        String courseName = ((String)refTable.getValueAt(selectedRow, 0)).trim();
                         int courseID = Integer.parseInt(courseName);
                         darkenBackground(true);
                         new CourseDetail(thisFrame, courseName, mainService.get관광지ListIn코스(courseID));
@@ -463,16 +476,14 @@ public class helloView extends JFrame implements ViewControl {
         });
 
         //  스크롤
-        JScrollPane scrollPane = new JScrollPane(courseTable);
+        JScrollPane scrollPane = new JScrollPane(refTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(300, 200));
-
-        courseTable.setFillsViewportHeight(true);
-        coursePanel.add(scrollPane);
+        refPanel.add(scrollPane);
 
         // 컴포넌트를 다시 그리도록 갱신
-        coursePanel.revalidate();
-        coursePanel.repaint();
+        refPanel.revalidate();
+        refPanel.repaint();
     }
 
     // 표 생성
