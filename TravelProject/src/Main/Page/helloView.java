@@ -242,7 +242,7 @@ public class helloView extends JFrame implements ViewControl {
         bottomPanel.add(searchResultLabel, BorderLayout.NORTH);
 
         // 검색 버튼 누르면 실행되야하는 표 임시 생성
-        createSpotTable(null);
+        createSpotTable(false, null);
     }
 
     private void initializeFavPanel() {
@@ -362,7 +362,7 @@ public class helloView extends JFrame implements ViewControl {
         favBottomPanel.add(favSearchResultLabel, BorderLayout.NORTH);
 
         // 검색 버튼 누르면 실행되야하는 표 임시 생성
-        createSpotTable(null);
+        createSpotTable(true, null);
     }
 
     // 코스 목록 생성
@@ -487,9 +487,14 @@ public class helloView extends JFrame implements ViewControl {
     }
 
     // 표 생성
-    private void createSpotTable(ArrayList<Model관광지> touristSpotList) {
-
-        bottomPanel.removeAll();
+    private void createSpotTable(boolean isFavorite, ArrayList<Model관광지> touristSpotList) {
+        JPanel refPanel;
+        if (isFavorite) {
+            refPanel = favBottomPanel;
+        } else {
+            refPanel = bottomPanel;
+        }
+        refPanel.removeAll();
 
         // 표 데이터
         String[] columnNames = {"관광지명", "지역", "실내/외","테마"};
@@ -517,20 +522,28 @@ public class helloView extends JFrame implements ViewControl {
         NonEditableTableModel tableModel = new NonEditableTableModel(data, columnNames);
 
         // 표 생성
-        table = new JTable(tableModel);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JTable refTable;
+        if (isFavorite) {
+            table = new JTable(tableModel);
+            refTable = table;
+        } else {
+            favTable = new JTable(tableModel);
+            refTable = favTable;
+        }
+
+        refTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         // 단일 선택 모델로 변경
         ListSelectionModel selectionModel = new DefaultListSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setSelectionModel(selectionModel);
+        refTable.setSelectionModel(selectionModel);
 
         // 표에 마우스 리스너 추가
-        table.addMouseListener(new MouseAdapter() {
+        refTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    int selectedRow = table.getSelectedRow();
+                    int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
                             new SpotDetailView(touristSpotList.get(selectedRow));
@@ -544,14 +557,14 @@ public class helloView extends JFrame implements ViewControl {
         });
 
         //  스크롤
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(refTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        table.setFillsViewportHeight(true);
-        bottomPanel.add(scrollPane, BorderLayout.CENTER);
+        refTable.setFillsViewportHeight(true);
+        refPanel.add(scrollPane, BorderLayout.CENTER);
 
         // 컴포넌트를 다시 그리도록 갱신
-        bottomPanel.revalidate();
-        bottomPanel.repaint();
+        refPanel.revalidate();
+        refPanel.repaint();
     }
 
 
