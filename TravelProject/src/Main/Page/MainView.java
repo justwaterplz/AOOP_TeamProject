@@ -493,10 +493,6 @@ public class MainView extends JFrame implements ViewControl {
         refPanel.repaint();
     }
 
-    private boolean checkCourseFavoritedStatus(int courseID) {
-        return mainService.checkCourseFavoritedStatus(courseID);
-    }
-
     // 표 생성
     private void createSpotTable(boolean isFavorite, ArrayList<Model관광지> touristSpotList) {
         JPanel refPanel;
@@ -549,11 +545,57 @@ public class MainView extends JFrame implements ViewControl {
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refTable.setSelectionModel(selectionModel);
 
+        // 우클릭 팝업 메뉴 생성
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem registerMenuItem = new JMenuItem();
+        registerMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = refTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int spotID = touristSpotList.get(selectedRow).get관광지ID();
+                    boolean isFavorited = checkSpotFavoritedStatus(spotID);
+                    if(isFavorited == false){
+                        if(mainService.addFavoriteSpot(spotID)){
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        if(mainService.deleteFavoriteSpot(spotID)){
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        });
+        popupMenu.add(registerMenuItem);
+
         // 표에 마우스 리스너 추가
         refTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                // 우클릭 시 즐겨찾기 등록 메뉴 팝업
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int row = refTable.rowAtPoint(e.getPoint());
+                    int column = refTable.columnAtPoint(e.getPoint());
+                    refTable.getSelectionModel().setLeadSelectionIndex(row);
+
+                    int selectedRow = refTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        int spotID = touristSpotList.get(selectedRow).get관광지ID();
+                        String itemStr = checkSpotFavoritedStatus(spotID) ? "즐겨찾기 삭제" : "즐겨찾기 등록";
+                        registerMenuItem.setText(itemStr);
+
+                        if (row >= 0 && row < refTable.getRowCount() && column >= 0 && column < refTable.getColumnCount()) {
+                            refTable.setRowSelectionInterval(row, row);
+                            popupMenu.show(refTable, e.getX(), e.getY());
+                        }
+                    }
+                }
+                else if (e.getClickCount() == 2) {
                     int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
@@ -576,6 +618,14 @@ public class MainView extends JFrame implements ViewControl {
         // 컴포넌트를 다시 그리도록 갱신
         refPanel.revalidate();
         refPanel.repaint();
+    }
+
+    private boolean checkCourseFavoritedStatus(int courseID) {
+        return mainService.checkCourseFavoritedStatus(courseID);
+    }
+
+    private boolean checkSpotFavoritedStatus(int spotID) {
+        return mainService.checkSpotFavoritedStatus(spotID);
     }
 
     void createSpotTableWithFilteredData() {
