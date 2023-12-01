@@ -7,5 +7,4 @@ public interface ViewControl {
      */
     public abstract void addGreyOutGlassPane();
     public abstract void darkenBackground(boolean isDarken);
-    public abstract boolean isFavTab();
 }

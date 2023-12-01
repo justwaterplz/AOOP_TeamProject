@@ -310,6 +310,41 @@ public class MainRepository {
         }
     }
 
+    public boolean getFavoriteStatus(int spotId) {
+        Connection conn = pool.getConnection();
+        if (conn == null) {
+            System.out.println("Failed Get Connection");
+            return false;
+        }
+
+        // SQL 쿼리 실행
+        String query = "SELECT COUNT(*) FROM 선호관광지 WHERE 관광지ID = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, spotId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // 결과 출력 및 저장
+            int count = 0;
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+
+            // 자원 해제
+            resultSet.close();
+            statement.close();
+
+            return count == 0 ? false : true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            pool.releaseConnection(conn);
+        }
+    }
+
     public boolean addFavoriteSpot(int spotId) {
         Connection conn = pool.getConnection();
         if (conn == null) {

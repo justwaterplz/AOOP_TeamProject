@@ -538,7 +538,6 @@ public class MainView extends JFrame implements ViewControl {
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refTable.setSelectionModel(selectionModel);
 
-        JFrame thisFrame = this;
         // 표에 마우스 리스너 추가
         refTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -547,7 +546,7 @@ public class MainView extends JFrame implements ViewControl {
                     int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
-                            new SpotDetailView(thisFrame, touristSpotList.get(selectedRow));
+                            new SpotDetailView(touristSpotList.get(selectedRow));
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
@@ -659,7 +658,6 @@ public class MainView extends JFrame implements ViewControl {
     }
 
     // 현재 즐겨찾기 탭이 선택됐는지 여부를 반환한다.
-    @Override
     public boolean isFavTab() {
         return tabbedPane.getSelectedIndex() == 1;
     }

@@ -46,6 +46,10 @@ public class MainService extends Component {
         return result;
     }
 
+    public boolean checkFavoritedStatus(int spotId) {
+            return mainRepository.getFavoriteStatus(spotId);
+    }
+
     public boolean addFavoriteSpot(int spotId) {
         return mainRepository.addFavoriteSpot(spotId);
     }
