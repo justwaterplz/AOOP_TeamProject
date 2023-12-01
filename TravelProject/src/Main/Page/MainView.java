@@ -514,6 +514,9 @@ public class MainView extends JFrame implements ViewControl {
 
         // 표 데이터
         String[] columnNames = {"관광지명", "지역", "실내/외","테마"};
+        if (isFavorite) {
+            columnNames[0] = "선호 관광지명";
+        }
 
         Object[][] data;
         if(touristSpotList == null){
