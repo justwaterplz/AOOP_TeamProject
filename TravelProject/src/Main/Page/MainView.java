@@ -564,6 +564,9 @@ public class MainView extends JFrame implements ViewControl {
                     } else {
                         if(mainService.deleteFavoriteSpot(spotID)){
                             JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                            if (isFavTab()) {
+                                createSpotTableWithFilteredData();
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
@@ -573,6 +576,7 @@ public class MainView extends JFrame implements ViewControl {
         });
         popupMenu.add(registerMenuItem);
 
+        JFrame thisFrame = this;
         // 표에 마우스 리스너 추가
         refTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -599,7 +603,7 @@ public class MainView extends JFrame implements ViewControl {
                     int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
                         try {
-                            new SpotDetailView(touristSpotList.get(selectedRow));
+                            new SpotDetailView(thisFrame, touristSpotList.get(selectedRow));
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
@@ -628,7 +632,8 @@ public class MainView extends JFrame implements ViewControl {
         return mainService.checkSpotFavoritedStatus(spotID);
     }
 
-    void createSpotTableWithFilteredData() {
+    @Override
+    public void createSpotTableWithFilteredData() {
         Map<String, Object> filterData = new HashMap<>();
         getFilterData(filterData);
 
@@ -718,6 +723,7 @@ public class MainView extends JFrame implements ViewControl {
         }
     }
 
+    @Override
     // 현재 즐겨찾기 탭이 선택됐는지 여부를 반환한다.
     public boolean isFavTab() {
         return tabbedPane.getSelectedIndex() == 1;

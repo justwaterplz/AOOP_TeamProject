@@ -29,6 +29,7 @@ public class SpotDetailView extends JFrame {
     private JButton favoriteButton;
     private JButton closeButton;
 
+    private JFrame parentFrame;
     private final MainService mainService;
     private final NaverApiService naverApiService;
     private final WeatherService weatherService;
@@ -37,11 +38,12 @@ public class SpotDetailView extends JFrame {
     private Model관광지 spot;
     private boolean isFavorited;
 
-    public SpotDetailView(Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public SpotDetailView(JFrame _parentFrame, Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         this.naverApiService = new NaverApiService();
         this.weatherService = new WeatherService();
         this.mainService = new MainService();
         this.spot = spot;
+        this.parentFrame = _parentFrame;
 
         initializeUI(spot);
         checkFavoritedStatus();
@@ -237,6 +239,10 @@ public class SpotDetailView extends JFrame {
                     }
                 }
                 checkFavoritedStatus();
+                ViewControl vc = (ViewControl) parentFrame;
+                if (vc != null && vc.isFavTab()) {
+                    vc.createSpotTableWithFilteredData();
+                }
             }
         }
     }
