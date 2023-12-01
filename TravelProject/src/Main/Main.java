@@ -1,11 +1,8 @@
 package Main;
 
-import Main.Page.SwingController;
-import Main.Page.helloView;
-import Main.Repository.MainRepository;
+import Main.Page.MainView;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -24,6 +21,6 @@ public class Main {
         }
 
         // GUI
-        new helloView();
+        new MainView();
     }
 }
