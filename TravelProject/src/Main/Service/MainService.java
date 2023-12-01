@@ -46,8 +46,12 @@ public class MainService extends Component {
         return result;
     }
 
-    public boolean checkFavoritedStatus(int spotId) {
-            return mainRepository.getFavoriteStatus(spotId);
+    public boolean checkCourseFavoritedStatus(int courseID) {
+        return mainRepository.getFavoriteStatusBy코스ID(courseID);
+    }
+
+    public boolean checkSpotFavoritedStatus(int spotId) {
+            return mainRepository.getFavoriteStatusBy관광지ID(spotId);
     }
 
     public boolean addFavoriteSpot(int spotId) {

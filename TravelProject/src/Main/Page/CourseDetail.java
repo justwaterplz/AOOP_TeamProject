@@ -2,25 +2,39 @@ package Main.Page;
 
 import Main.Model.Model관광지;
 import Main.Module.SpotNameManager;
+import Main.Service.MainService;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class CourseDetail extends JDialog {
+    private final MainService mainService;
+    private JFrame parentFrame;
     private JLabel courseLabel;
     private JTable listTable;
     private JPanel buttonPanel;
+    private JButton favoriteButton;
+    private JButton closeButton;
+    private boolean isFavorited;
+    private boolean isFavoriteTab;
+    private int courseID;
 
-    public CourseDetail(JFrame parentFrame, String _courseName, ArrayList<Model관광지> 관광지List) {
+    public CourseDetail(JFrame _parentFrame, String _courseName, ArrayList<Model관광지> 관광지List, boolean _isFavoriteTab) {
         // 모달 다이얼로그 창 생성
-        super(parentFrame, "", true);
+        super(_parentFrame, "", true);
+        this.parentFrame = _parentFrame;
+        this.mainService = new MainService();
+        this.isFavoriteTab = _isFavoriteTab;
+        this.courseID = Integer.parseInt(_courseName);
 
         // 다이얼로그가 닫힐 때 특정 작업 수행을 위한 WindowListener 추가
         addWindowListener(new WindowAdapter() {
@@ -31,8 +45,22 @@ public class CourseDetail extends JDialog {
                     frame.darkenBackground(false);
                 }
             }
+            @Override
+            public void windowClosed(WindowEvent e) {
+                // 창이 닫힌 후 수행할 동작
+                ViewControl frame = (ViewControl) parentFrame;
+                if (frame != null) {
+                    frame.darkenBackground(false);
+                }
+            }
         });
 
+        initializeUI(_courseName, 관광지List);
+        checkFavoritedStatus();
+        setVisible(true);
+    }
+
+    private void initializeUI(String _courseName, ArrayList<Model관광지> 관광지List) {
         setLayout(new BorderLayout());
 
         // 코스 이름
@@ -102,10 +130,23 @@ public class CourseDetail extends JDialog {
         listTable.setFillsViewportHeight(true);
         add(scrollPane, BorderLayout.CENTER);
 
+        // 즐겨찾기 버튼
+        favoriteButton = new JButton("");
+        favoriteButton.addActionListener(new ButtonActionListener());
+        // 닫기 버튼
+        closeButton = new JButton("닫기");
+        closeButton.addActionListener(new ButtonActionListener());
+
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        favoriteButton.setPreferredSize(new Dimension(150, 30)); // 예시 크기
+        closeButton.setPreferredSize(new Dimension(150, 30)); // 예시 크기
+        buttonPanel.add(favoriteButton);
+        buttonPanel.add(closeButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+
         // 다이얼로그 기본 설정
         pack();
         setFrameLocationToCenter();
-        setVisible(true);
     }
 
     private void setFrameLocationToCenter() {
@@ -118,5 +159,43 @@ public class CourseDetail extends JDialog {
         int y = (screenSize.height - frameSize.height) / 2;
         // 프레임 위치 설정
         setLocation(x, y);
+    }
+
+    // 즐겨찾기 상태 체크
+    public void checkFavoritedStatus() {
+        isFavorited = mainService.checkCourseFavoritedStatus(courseID);
+        favoriteButton.setText(isFavorited == true ? "즐겨찾기 삭제" : "즐겨찾기 등록");
+    }
+
+    // 버튼 액션 리스너
+    private class ButtonActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton clickedButton = (JButton) e.getSource();
+
+            if (clickedButton == closeButton) {  // "닫기"
+                dispose();
+            }
+            else if (clickedButton == favoriteButton) {  // "검색"
+                if(isFavorited == false){
+                    if(mainService.addFavoriteCourse(courseID)){
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    if(mainService.deleteFavoriteCourse(courseID)){
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "즐겨찾기 삭제 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                checkFavoritedStatus();
+                ViewControl vc = (ViewControl) parentFrame;
+                if (vc != null) {
+                    vc.createCourseTable(isFavoriteTab);
+                }
+            }
+        }
     }
 }

@@ -6,13 +6,9 @@ import Main.Module.SpotNameManager;
 import Main.Service.MainService;
 import Main.Service.NaverApiService;
 import Main.Service.WeatherService;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.lang.model.util.Elements;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -21,12 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SpotDetailView extends JFrame {
 
@@ -165,7 +156,7 @@ public class SpotDetailView extends JFrame {
 
     // 즐겨찾기 상태 체크
     public void checkFavoritedStatus() {
-         isFavorited = mainService.checkFavoritedStatus(spot.get관광지ID());
+         isFavorited = mainService.checkSpotFavoritedStatus(spot.get관광지ID());
          favoriteButton.setText(isFavorited==true ?"즐겨찾기 삭제" : "즐겨찾기 등록");
     }
 

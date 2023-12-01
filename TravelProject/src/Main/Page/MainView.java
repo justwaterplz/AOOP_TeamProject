@@ -466,10 +466,11 @@ public class MainView extends JFrame implements ViewControl {
                 else if (e.getClickCount() == 2) {
                     int selectedRow = refTable.getSelectedRow();
                     if (selectedRow != -1) {
-                        String courseName = ((String)refTable.getValueAt(selectedRow, 0)).trim();
+                        String courseName = ((String) refTable.getValueAt(selectedRow, 0)).trim();
                         int courseID = Integer.parseInt(courseName);
+
                         darkenBackground(true);
-                        new CourseDetail(thisFrame, courseName, mainService.get관광지ListIn코스(courseID));
+                        new CourseDetail(thisFrame, courseName, mainService.get관광지ListIn코스(courseID), isFavorite);
                     }
                 }
             }
