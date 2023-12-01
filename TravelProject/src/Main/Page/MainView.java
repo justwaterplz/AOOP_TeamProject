@@ -366,7 +366,8 @@ public class MainView extends JFrame implements ViewControl {
     }
 
     // 코스 목록 생성
-    private void createCourseTable(boolean isFavorite) {
+    @Override
+    public void createCourseTable(boolean isFavorite) {
         JPanel refPanel;
         if (isFavorite) {
             refPanel = favCoursePanel;
@@ -412,10 +413,9 @@ public class MainView extends JFrame implements ViewControl {
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refTable.setSelectionModel(selectionModel);
 
-        // 팝업 메뉴 생성
+        // 우클릭 팝업 메뉴 생성
         JPopupMenu popupMenu = new JPopupMenu();
-        String itemStr = isFavorite ? "즐겨찾기 삭제" : "즐겨찾기 등록";
-        JMenuItem registerMenuItem = new JMenuItem(itemStr);
+        JMenuItem registerMenuItem = new JMenuItem();
         registerMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -424,15 +424,12 @@ public class MainView extends JFrame implements ViewControl {
                     String courseName = ((String)refTable.getValueAt(selectedRow, 0)).trim();
                     int courseID = Integer.parseInt(courseName);
 
-                    if(isFavorite == false){
-                        if (mainService.checkFavoriteCourseExists(courseID))
-                            JOptionPane.showMessageDialog(null, "이미 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-                        else {
-                            if(mainService.addFavoriteCourse(courseID)){
-                                JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
-                            }
+                    boolean isFavorited = checkCourseFavoritedStatus(courseID);
+                    if(isFavorited == false){
+                        if(mainService.addFavoriteCourse(courseID)){
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "즐겨찾기 등록 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
                         if(mainService.deleteFavoriteCourse(courseID)){
@@ -456,10 +453,19 @@ public class MainView extends JFrame implements ViewControl {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     int row = refTable.rowAtPoint(e.getPoint());
                     int column = refTable.columnAtPoint(e.getPoint());
+                    refTable.getSelectionModel().setLeadSelectionIndex(row);
 
-                    if (row >= 0 && row < refTable.getRowCount() && column >= 0 && column < refTable.getColumnCount()) {
-                        refTable.setRowSelectionInterval(row, row);
-                        popupMenu.show(refTable, e.getX(), e.getY());
+                    int selectedRow = refTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        String courseName = ((String) refTable.getValueAt(selectedRow, 0)).trim();
+                        int courseID = Integer.parseInt(courseName);
+                        String itemStr = checkCourseFavoritedStatus(courseID) ? "즐겨찾기 삭제" : "즐겨찾기 등록";
+                        registerMenuItem.setText(itemStr);
+
+                        if (row >= 0 && row < refTable.getRowCount() && column >= 0 && column < refTable.getColumnCount()) {
+                            refTable.setRowSelectionInterval(row, row);
+                            popupMenu.show(refTable, e.getX(), e.getY());
+                        }
                     }
                 }
                 // 더블 클릭하면 코스 창 띄우기
@@ -485,6 +491,10 @@ public class MainView extends JFrame implements ViewControl {
         // 컴포넌트를 다시 그리도록 갱신
         refPanel.revalidate();
         refPanel.repaint();
+    }
+
+    private boolean checkCourseFavoritedStatus(int courseID) {
+        return mainService.checkCourseFavoritedStatus(courseID);
     }
 
     // 표 생성
