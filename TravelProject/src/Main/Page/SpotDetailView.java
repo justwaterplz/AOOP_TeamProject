@@ -44,13 +44,18 @@ public class SpotDetailView extends JFrame {
     private double longitude;
     private double latitude;
     private Model관광지 spot;
-    private boolean isFavorited;
+    private boolean isFavorite;
 
-    public SpotDetailView(Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public SpotDetailView(JFrame parentFrame, Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         this.naverApiService = new NaverApiService();
         this.weatherService = new WeatherService();
         this.mainService = new MainService();
         this.spot = spot;
+
+        ViewControl vc = (ViewControl)parentFrame;
+        if (vc != null) {
+            this.isFavorite = vc.isFavTab();
+        }
 
         initializeUI(spot);
         checkFavoritedStatus();
@@ -165,8 +170,8 @@ public class SpotDetailView extends JFrame {
 
     // 즐겨찾기 상태 체크
     public void checkFavoritedStatus() {
-         isFavorited = mainService.checkFavoritedStatus(spot.get관광지ID());
-         favoriteButton.setText(isFavorited==true ?"즐겨찾기 삭제" : "즐겨찾기 등록");
+         //TODO isFavorited = mainService.checkFavoritedStatus(spot.get관광지ID());
+         favoriteButton.setText(isFavorite==true ?"즐겨찾기 삭제" : "즐겨찾기 등록");
     }
 
 
@@ -232,7 +237,7 @@ public class SpotDetailView extends JFrame {
                 dispose();
             }
             else if (clickedButton == favoriteButton) {  // "검색"
-                if(isFavorited==false){
+                if(isFavorite==false){
                     if(mainService.addFavoriteSpot(spot.get관광지ID())){
                         JOptionPane.showMessageDialog(null, "즐겨찾기 등록 되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                     } else {
