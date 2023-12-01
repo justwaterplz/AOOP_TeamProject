@@ -100,6 +100,15 @@ public class MainView extends JFrame implements ViewControl {
                 }
             }
         });
+        tabbedPane.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
+            @Override
+            protected void paintText(Graphics g, int tabPlacement, Font font, FontMetrics metrics, int tabIndex, String title, Rectangle textRect, boolean isSelected) {
+                // Customize text appearance if needed
+                g.setColor(isSelected ? Color.BLUE : Color.BLACK);
+                g.setFont(font);
+                g.drawString(title, textRect.x, textRect.y + metrics.getAscent());
+            }
+        });
         add(tabbedPane);
 
         setTitle("여행의 민족");
