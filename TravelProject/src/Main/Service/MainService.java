@@ -102,8 +102,6 @@ public class MainService extends Component {
 
     }
 
-
-
     /**
      *   동적으로 쿼리문, 파라미터를 생성하기위한 함수들
      */

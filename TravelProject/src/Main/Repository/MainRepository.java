@@ -489,7 +489,7 @@ public class MainRepository {
         // SQL 쿼리 실행
         String desktopPath = System.getProperty("user.home") + "\\Desktop\\FavoriteSpotoutput.csv";
 
-        String query = "SELECT * FROM 관광지";
+        String query = "SELECT 관광지.* FROM 선호관광지 JOIN 관광지 ON 선호관광지.관광지ID = 관광지.관광지ID";
         Statement statement = null;
         try {
             statement = conn.createStatement();

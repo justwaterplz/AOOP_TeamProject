@@ -32,7 +32,6 @@ public class SpotDetailView extends JFrame {
     private JFrame parentFrame;
     private final MainService mainService;
     private final NaverApiService naverApiService;
-    private final WeatherService weatherService;
     private double longitude;
     private double latitude;
     private Model관광지 spot;
@@ -40,7 +39,6 @@ public class SpotDetailView extends JFrame {
 
     public SpotDetailView(JFrame _parentFrame, Model관광지 spot) throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
         this.naverApiService = new NaverApiService();
-        this.weatherService = new WeatherService();
         this.mainService = new MainService();
         this.spot = spot;
         this.parentFrame = _parentFrame;
