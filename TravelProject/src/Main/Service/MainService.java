@@ -1,13 +1,17 @@
 package Main.Service;
 
 import Main.Model.Model관광지;
+import Main.Model.Model코스정보;
 import Main.Repository.MainRepository;
 
-import javax.xml.crypto.Data;
-import java.lang.reflect.Array;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
-public class MainService {
+public class MainService extends Component {
     private final MainRepository mainRepository;
 
     public MainService() {
@@ -16,13 +20,12 @@ public class MainService {
 
     /**
      *   필터를 통해 동적으로 쿼리문, 파라미터를 생성해서 Repository로부터 필터링된 관광지리스트 받아옴
-     *   preparedSQL이므로 SQLInjection으로부터 안전
      */
     public ArrayList<Model관광지> getTouristSpotListByFilters(Map<String, Object> filterData) {
         Queue<String> params = new LinkedList<>();
 
-        // 기본 쿼리
-        StringBuilder query = new StringBuilder("SELECT * FROM 관광지 WHERE ");
+        // 기본 쿼리 설정
+        StringBuilder query = setupQuery(filterData);
 
         // 동적으로 테마 분류 쿼리에 추가 체크 안되있을시 null
         if(!addThemeFilters(query, filterData, params)){
@@ -41,6 +44,78 @@ public class MainService {
 
         ArrayList<Model관광지> result = mainRepository.find관광지ByFilter(query.toString(), params);
         return result;
+    }
+
+    public boolean checkCourseFavoritedStatus(int courseID) {
+        return mainRepository.getFavoriteStatusBy코스ID(courseID);
+    }
+
+    public boolean checkSpotFavoritedStatus(int spotId) {
+            return mainRepository.getFavoriteStatusBy관광지ID(spotId);
+    }
+
+    public boolean addFavoriteSpot(int spotId) {
+        return mainRepository.addFavoriteSpot(spotId);
+    }
+
+    public boolean deleteFavoriteSpot(int spotId) {
+        return mainRepository.deleteFavoriteSpot(spotId);
+    }
+
+    // 즐겨찾는 관광지 데이터를 받은 후에 hashmap형식으로 카운트해서 뷰에 보내줌
+    public Map<String,Integer> getFavoriteThemeCounts() {
+        Map<String, Integer> countMap = new LinkedHashMap() {{
+            put("TH01", 0); put("TH02", 0); put("TH03", 0); put("TH04", 0); put("TH05", 0); put("TH06", 0);
+        }};
+
+        ArrayList<Model관광지> favoriteSpotList = mainRepository.getFavoriteSpotList();    // 즐겨찾는 관광지들을 불러온다
+
+        for (Model관광지 spot : favoriteSpotList) {                        // HashMap을 이용해 개수들을 넣어준다.
+            int count = countMap.get(spot.get테마분류())+1;
+            countMap.put(spot.get테마분류(),count);
+        }
+
+        return countMap;
+    }
+
+    public void makeDbtoCsvSpot(){mainRepository.makeDbtoCsvSpot();}
+
+    public void makeDbtoCsvFavoriteSpot(){mainRepository.makeDbtoCsvFavoriteSpot();}
+
+    public void makeDbtoCsvCourse(){mainRepository.makeDbtoCsvCourse();}
+
+    public int importCsvtoDbCourse() throws IOException {
+        String csvFilePath = "null";
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select CSV File");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV Files", "csv"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+            return mainRepository.importCsvtoDbCourse(csvFilePath);
+        } else if (result == JFileChooser.CANCEL_OPTION){
+            return 0;
+        } else {
+            return -1;
+        }
+
+
+    }
+
+    /**
+     *   동적으로 쿼리문, 파라미터를 생성하기위한 함수들
+     */
+
+    private static StringBuilder setupQuery(Map<String, Object> filterData) {
+        StringBuilder query;
+
+        boolean isFavoriteChecked = Boolean.TRUE.equals(filterData.get("favoriteChecked"));
+        if(isFavoriteChecked == true){
+            query = new StringBuilder("SELECT 관광지.* FROM 선호관광지 JOIN 관광지 ON 선호관광지.관광지ID = 관광지.관광지ID WHERE");
+        } else {
+            query = new StringBuilder("SELECT * FROM 관광지 WHERE ");
+        }
+        return query;
     }
 
     private boolean addThemeFilters(StringBuilder query, Map<String, Object> filterData, Queue<String> param) {
@@ -125,4 +200,30 @@ public class MainService {
         }
     }
 
+    public ArrayList<Integer> get코스List(boolean isFavorite)
+    {
+        return mainRepository.get코스List(isFavorite);
+    }
+
+    public ArrayList<Model관광지> get관광지ListIn코스(int courseID) {
+        Model코스정보 코스정보 = mainRepository.get코스정보(courseID);
+
+        // 코스정보에 등록된 모든 관광지를 Model관광지 객체로 만들어 리스트로 저장
+        ArrayList<Model관광지> 관광지List = new ArrayList<>();
+        for (int i = 0; i < 코스정보.get관광지ID목록().size(); ++i) {
+            int spotID = 코스정보.get관광지ID목록().get(i);
+            관광지List.add(mainRepository.get관광지By관광지ID(spotID));
+        }
+
+        return 관광지List;
+    }
+
+    public boolean addFavoriteCourse(int courseID) {
+        return mainRepository.add선호코스(courseID);
+    }
+
+    public boolean deleteFavoriteCourse(int courseID) {
+        return mainRepository.delete선호코스(courseID);
+    }
+    public boolean checkFavoriteCourseExists(int courseID) { return mainRepository.check선호코스Exists(courseID); }
 }
